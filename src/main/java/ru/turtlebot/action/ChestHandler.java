@@ -61,8 +61,13 @@ public final class ChestHandler {
             case 0 -> {
                 if (t < cfg.chestOpenWaitTicks) return StepResult.RUNNING;
                 invBefore = InventoryUtil.countSeagrass(p);
-                for (int i = 0; i < cSlots; i++)
-                    if (h.getSlot(i).getStack().isOf(Items.SEAGRASS)) queue.add(i);
+                // Берём только один стак за один визит в сундук.
+                for (int i = 0; i < cSlots; i++) {
+                    if (h.getSlot(i).getStack().isOf(Items.SEAGRASS)) {
+                        queue.add(i);
+                        break;
+                    }
+                }
                 if (queue.isEmpty()) {
                     taken = 0; drained = true; remaining = 0;
                     return StepResult.DONE;
