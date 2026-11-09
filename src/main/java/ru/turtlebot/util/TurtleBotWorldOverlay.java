@@ -6,7 +6,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.WorldRenderer;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.passive.TurtleEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -45,20 +45,42 @@ public final class TurtleBotWorldOverlay {
     private static void drawPath(WorldRenderContext context, List<BlockPos> path, Vec3d camera) {
         if (path == null || path.isEmpty()) return;
         VertexConsumer lines = context.consumers().getBuffer(RenderLayer.getLines());
-        var matrices = context.matrixStack();
+        MatrixStack matrices = context.matrixStack();
         matrices.push();
         try {
+            MatrixStack.Entry entry = matrices.peek();
+            BlockPos previous = null;
             for (BlockPos node : path) {
-                double x = node.getX() - camera.x;
-                double y = node.getY() - camera.y;
-                double z = node.getZ() - camera.z;
-                Box marker = new Box(x + 0.18, y + 0.025, z + 0.18,
-                        x + 0.82, y + 0.11, z + 0.82);
-                WorldRenderer.drawBox(matrices, lines, marker, 0.15f, 0.85f, 1.0f, 0.95f);
+                double x = node.getX() + 0.5 - camera.x;
+                double y = node.getY() + 0.08 - camera.y;
+                double z = node.getZ() + 0.5 - camera.z;
+                if (previous != null) {
+                    double px = previous.getX() + 0.5 - camera.x;
+                    double py = previous.getY() + 0.08 - camera.y;
+                    double pz = previous.getZ() + 0.5 - camera.z;
+                    drawLine(lines, entry, px, py, pz, x, y, z);
+                }
+                double r = 0.20;
+                drawLine(lines, entry, x - r, y, z - r, x + r, y, z - r);
+                drawLine(lines, entry, x + r, y, z - r, x + r, y, z + r);
+                drawLine(lines, entry, x + r, y, z + r, x - r, y, z + r);
+                drawLine(lines, entry, x - r, y, z + r, x - r, y, z - r);
+                previous = node;
             }
         } finally {
             matrices.pop();
         }
+    }
+
+    private static void drawLine(VertexConsumer consumer, MatrixStack.Entry entry,
+                                 double x1, double y1, double z1,
+                                 double x2, double y2, double z2) {
+        consumer.vertex(entry.getPositionMatrix(), (float) x1, (float) y1, (float) z1)
+                .color(0.15f, 0.85f, 1.0f, 0.95f)
+                .normal(entry.getNormalMatrix(), 0.0f, 1.0f, 0.0f).next();
+        consumer.vertex(entry.getPositionMatrix(), (float) x2, (float) y2, (float) z2)
+                .color(0.15f, 0.85f, 1.0f, 0.95f)
+                .normal(entry.getNormalMatrix(), 0.0f, 1.0f, 0.0f).next();
     }
 
     private static void drawCooldownLabels(WorldRenderContext context, Vec3d camera) {
