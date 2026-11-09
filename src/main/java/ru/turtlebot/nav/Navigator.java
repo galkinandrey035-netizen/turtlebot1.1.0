@@ -38,6 +38,9 @@ public final class Navigator {
         Keys.release(mc);
     }
 
+    /** Releases movement keys without discarding the current route. */
+    public void releaseMovement(MinecraftClient mc) { Keys.release(mc); }
+
     public List<BlockPos> currentPath() { return follower.remainingPath(); }
 
     public Status tick(MinecraftClient mc, long now) {
