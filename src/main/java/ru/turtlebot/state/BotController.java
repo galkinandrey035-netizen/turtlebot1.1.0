@@ -8,6 +8,7 @@ import net.minecraft.entity.passive.TurtleEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import ru.turtlebot.action.*;
+import ru.turtlebot.util.FedTurtleHighlighter;
 import ru.turtlebot.config.BotConfig;
 import ru.turtlebot.config.ConfigManager;
 import ru.turtlebot.data.TurtleRegistry;
@@ -94,6 +95,7 @@ public final class BotController {
 
     private void cleanup() {
         MinecraftClient mc = MinecraftClient.getInstance();
+        AutoEat.release(mc);
         nav.cancel(mc);
         if (mc.player != null && mc.player.currentScreenHandler != mc.player.playerScreenHandler) {
             mc.player.closeHandledScreen();
@@ -189,6 +191,7 @@ public final class BotController {
         }
         mc.options.attackKey.setPressed(false);
         mc.options.jumpKey.setPressed(false);
+        if (AutoEat.tick(mc)) return;
         try {
             switch (state) {
                 case TELEPORT_HOME -> tickTeleportHome(mc);
@@ -304,6 +307,7 @@ public final class BotController {
         for (TurtleEntity t : list) {
             boolean baby = t.isBaby();
             registry.seen(t.getUuid(), baby, now);
+            if (registry.wasFed(t.getUuid())) FedTurtleHighlighter.apply(t);
             if (baby) { babies++; continue; }
             adults++;
             if (t.hasEgg()) continue;
@@ -365,6 +369,7 @@ public final class BotController {
             case NEED_APPROACH -> setState(BotState.APPROACH_TURTLE);
             case DONE -> {
                 registry.markFed(target.getUuid(), System.currentTimeMillis());
+                FedTurtleHighlighter.apply(target);
                 totalFed++;
                 waitStartMs = 0;
                 BotLog.info("Покормлена черепаха " + shortId(target) + " (всего за сессию: " + totalFed
