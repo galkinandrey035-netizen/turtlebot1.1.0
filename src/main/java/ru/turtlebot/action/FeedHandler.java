@@ -14,6 +14,7 @@ import ru.turtlebot.util.Geo;
 public final class FeedHandler {
     private TurtleEntity turtle;
     private int phase, ticks, attempts, countBefore;
+    private boolean wasInLove;
     public boolean outOfGrass;
 
     public void begin(TurtleEntity target) {
@@ -47,7 +48,7 @@ public final class FeedHandler {
                     outOfGrass = true;
                     return StepResult.FAILED;
                 }
-                if (player.getMainHandStack().isOf(Items.SEAGRASS)) {
+                if (player.getMainHandStack().isOf(Items.SEAGRASS) && ticks >= 3) {
                     phase = 1;
                     ticks = 0;
                 } else if (ticks > 20) {
@@ -56,12 +57,14 @@ public final class FeedHandler {
             }
             case 1 -> {
                 Geo.lookAt(player, turtle.getPos().add(0, turtle.getHeight() / 2.0, 0));
+                if (ticks < 2) break;
                 if (!player.getMainHandStack().isOf(Items.SEAGRASS)) {
                     phase = 0;
                     ticks = 0;
                     break;
                 }
                 countBefore = player.getMainHandStack().getCount();
+                wasInLove = turtle.isInLove();
                 var result = mc.interactionManager.interactEntity(player, turtle, Hand.MAIN_HAND);
                 player.swingHand(Hand.MAIN_HAND);
                 if (!result.isAccepted()) {
@@ -74,16 +77,15 @@ public final class FeedHandler {
                 ticks = 0;
             }
             case 2 -> {
-                ItemStack held = player.getMainHandStack();
-                int countNow = held.isOf(Items.SEAGRASS) ? held.getCount() : 0;
-                // Проверяем и локальное уменьшение стака, и серверный love-state.
-                // Второй признак надёжнее, когда клиент не уменьшил предмет предсказанием.
-                if (countNow < countBefore || turtle.isInLove()) return StepResult.DONE;
+                ItemStack s = player.getMainHandStack();
+                int now = s.isOf(Items.SEAGRASS) ? s.getCount() : 0;
+                if (now < countBefore || (!wasInLove && turtle.isInLove())) return StepResult.DONE;
+                // In creative mode the stack is not consumed; interaction was accepted in phase 1.
+                if (player.getAbilities().creativeMode && ticks >= 5) return StepResult.DONE;
                 if (ticks >= cfg.feedConfirmTicks) {
                     attempts++;
                     if (attempts >= cfg.feedAttemptsLimit) return StepResult.FAILED;
-                    BotLog.debug("Кормление не подтверждено, повтор " + (attempts + 1)
-                            + "/" + cfg.feedAttemptsLimit);
+                    BotLog.debug("Кормление не подтверждено, повтор " + (attempts + 1) + "/" + cfg.feedAttemptsLimit);
                     phase = 1;
                     ticks = 0;
                 }
