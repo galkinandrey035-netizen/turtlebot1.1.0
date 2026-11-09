@@ -49,8 +49,8 @@ public final class PathFollower {
 
         float desired = (float) (MathHelper.atan2(dz, dx) * 180.0 / Math.PI) - 90f;
         float diff = MathHelper.wrapDegrees(desired - p.getYaw());
-        p.setYaw(p.getYaw() + MathHelper.clamp(diff, -45f, 45f));
-        p.setPitch(p.getPitch() + (15f - p.getPitch()) * 0.3f);
+        p.setYaw(p.getYaw() + MathHelper.clamp(diff, -7f, 7f));
+        p.setPitch(p.getPitch() + (15f - p.getPitch()) * 0.12f);
         Keys.walk(mc, Math.abs(diff) < 70f);
 
         Vec3d pos = p.getPos();
