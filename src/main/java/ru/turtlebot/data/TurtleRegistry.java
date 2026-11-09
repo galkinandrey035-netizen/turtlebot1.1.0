@@ -75,8 +75,22 @@ public final class TurtleRegistry {
         TurtleRecord r = data.turtles.get(id.toString());
         return r == null ? 0 : Math.max(r.nextFeedAt, r.retryAfter);
     }
+
+    public synchronized long nextReadyInMs(long now) {
+        long best = -1;
+        for (TurtleRecord r : data.turtles.values()) {
+            if (r == null || r.baby) continue;
+            long at = Math.max(r.nextFeedAt, r.retryAfter);
+            if (at > now && (best < 0 || at - now < best)) best = at - now;
+        }
+        return best;
+    }
     public synchronized void markFed(UUID id, long now) {
         TurtleRecord r = data.turtles.get(id.toString());
+        if (r != null && r.baby) {
+            BotLog.warn("Отказ от записи кормления: UUID принадлежит детёнышу");
+            return;
+        }
         if (r == null) { seen(id, false, now); r = data.turtles.get(id.toString()); }
         r.lastFed = now;
         r.nextFeedAt = now + ConfigManager.get().feedCooldownSeconds * 1000L;

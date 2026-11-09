@@ -11,6 +11,7 @@
     "client": ["ru.turtlebot.TurtleBotClient"],
     "modmenu": ["ru.turtlebot.gui.ModMenuIntegration"]
   },
+  "mixins": ["turtlebot.mixins.json"],
   "depends": {
     "fabricloader": ">=0.15.0",
     "minecraft": "~1.20.1",
