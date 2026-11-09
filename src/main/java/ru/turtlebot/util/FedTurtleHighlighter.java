@@ -19,7 +19,7 @@ public final class FedTurtleHighlighter {
             team = scoreboard.addTeam(TEAM_NAME);
             team.setColor(Formatting.GREEN);
         }
-        scoreboard.addScoreHolderToTeam(turtle.getUuidAsString(), team);
+        scoreboard.addPlayerToTeam(turtle.getUuidAsString(), team);
         turtle.setGlowing(true);
     }
 }
