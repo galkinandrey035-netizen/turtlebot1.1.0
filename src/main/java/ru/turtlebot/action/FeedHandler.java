@@ -40,8 +40,21 @@ public final class FeedHandler {
             }
             case 1 -> {
                 Geo.lookAt(p, turtle.getPos().add(0, turtle.getHeight() / 2.0, 0));
+                if (!p.getMainHandStack().isOf(Items.SEAGRASS)) {
+                    phase = 0;
+                    t = 0;
+                    break;
+                }
                 before = p.getMainHandStack().getCount();
-                mc.interactionManager.interactEntity(p, turtle, Hand.MAIN_HAND);
+                var result = mc.interactionManager.interactEntity(p, turtle, Hand.MAIN_HAND);
+                p.swingHand(Hand.MAIN_HAND);
+                if (!result.isAccepted()) {
+                    attempts++;
+                    if (attempts >= cfg.feedAttemptsLimit) return StepResult.FAILED;
+                    phase = 1;
+                    t = 0;
+                    break;
+                }
                 phase = 2; t = 0;
             }
             case 2 -> {
