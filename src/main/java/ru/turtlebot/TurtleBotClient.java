@@ -12,11 +12,13 @@ import ru.turtlebot.config.ConfigManager;
 import ru.turtlebot.data.TurtleRegistry;
 import ru.turtlebot.state.BotController;
 import ru.turtlebot.util.BotLog;
+import ru.turtlebot.util.TurtleBotWorldOverlay;
 
 public final class TurtleBotClient implements ClientModInitializer {
     private static BotController controller;
     private static TurtleRegistry registry;
     public static BotController controller() { return controller; }
+    public static TurtleRegistry registry() { return registry; }
     @Override
     public void onInitializeClient() {
         ConfigManager.load();
@@ -26,6 +28,7 @@ public final class TurtleBotClient implements ClientModInitializer {
         ClientCommandRegistrationCallback.EVENT.register(
                 (dispatcher, access) -> BotCommands.register(dispatcher, controller, registry));
         ClientTickEvents.END_CLIENT_TICK.register(controller::tick);
+        TurtleBotWorldOverlay.register();
         ClientPlayConnectionEvents.DISCONNECT.register((h, c) -> controller.stop("отключение от сервера"));
         ClientLifecycleEvents.CLIENT_STOPPING.register(c -> {
             controller.stop("закрытие клиента");

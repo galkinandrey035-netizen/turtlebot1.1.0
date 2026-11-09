@@ -24,6 +24,10 @@ public final class PathFollower {
 
     public void clear() { path = List.of(); idx = 0; }
 
+    public List<BlockPos> remainingPath() {
+        return idx >= path.size() ? List.of() : List.copyOf(path.subList(idx, path.size()));
+    }
+
     public Status tick(MinecraftClient mc) {
         if (idx >= path.size()) { Keys.release(mc); return Status.FINISHED; }
         ClientPlayerEntity p = mc.player;
@@ -51,10 +55,14 @@ public final class PathFollower {
         float diff = MathHelper.wrapDegrees(desired - p.getYaw());
         p.setYaw(p.getYaw() + MathHelper.clamp(diff, -7f, 7f));
         p.setPitch(p.getPitch() + (15f - p.getPitch()) * 0.12f);
-        Keys.walk(mc, Math.abs(diff) < 70f);
+        // Сначала довернуть корпус на месте, затем идти прямо к следующей точке.
+        // Это не даёт инерции движения превращать поворот в бег по кругу.
+        Keys.walk(mc, Math.abs(diff) < 12f);
 
         Vec3d pos = p.getPos();
-        if (lastPos != null && pos.squaredDistanceTo(lastPos) < 0.0004) stillTicks++; else stillTicks = 0;
+        if (Math.abs(diff) >= 12f) stillTicks = 0;
+        else if (lastPos != null && pos.squaredDistanceTo(lastPos) < 0.0004) stillTicks++;
+        else stillTicks = 0;
         lastPos = pos;
         nodeTicks++;
         if (stillTicks >= 25 || nodeTicks > 60) { Keys.release(mc); return Status.STUCK; }
