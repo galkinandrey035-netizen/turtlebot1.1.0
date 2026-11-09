@@ -102,7 +102,9 @@ public final class BotController {
         }
     }
 
-    public List<BlockPos> currentPath() { return nav.currentPath(); }\n\n    public List<String> status() {
+    public List<BlockPos> currentPath() { return nav.currentPath(); }
+
+    public List<String> status() {
         List<String> l = new ArrayList<>();
         MinecraftClient mc = MinecraftClient.getInstance();
         l.add("Состояние: " + state.title + (paused ? " (на паузе)" : ""));
