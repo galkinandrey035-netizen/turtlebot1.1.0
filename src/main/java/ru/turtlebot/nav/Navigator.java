@@ -38,7 +38,9 @@ public final class Navigator {
         Keys.release(mc);
     }
 
-    public List<BlockPos> currentPath() { return follower.remainingPath(); }\n\n    public Status tick(MinecraftClient mc, long now) {
+    public List<BlockPos> currentPath() { return follower.remainingPath(); }
+
+    public Status tick(MinecraftClient mc, long now) {
         BotConfig cfg = ConfigManager.get();
         ClientPlayerEntity p = mc.player;
 
@@ -69,7 +71,18 @@ public final class Navigator {
 
         switch (follower.tick(mc)) {
             case RUNNING -> { }
-            case FINISHED -> {\n                // Не запускаем новый A* бесконечно, если конечная точка пути\n                // достигнута, но условие близости к цели ещё не выполнено.\n                if (eyeOk.test(p.getEyePos())) {\n                    cancel(mc);\n                    return Status.ARRIVED;\n                }\n                follower.clear();\n                replans++;\n                lastPlan = now;\n                if (replans > cfg.maxReplans) { cancel(mc); return Status.FAILED; }\n            }
+            case FINISHED -> {
+                // Не запускаем новый A* бесконечно, если конечная точка пути
+                // достигнута, но условие близости к цели ещё не выполнено.
+                if (eyeOk.test(p.getEyePos())) {
+                    cancel(mc);
+                    return Status.ARRIVED;
+                }
+                follower.clear();
+                replans++;
+                lastPlan = now;
+                if (replans > cfg.maxReplans) { cancel(mc); return Status.FAILED; }
+            }
             case STUCK, BLOCKED -> {
                 follower.clear();
                 replans++;
