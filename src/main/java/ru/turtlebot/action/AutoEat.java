@@ -1,72 +1,72 @@
 package ru.turtlebot.action;
 
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.entity.effect.StatusEffectCategory;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.item.FoodComponent;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.slot.SlotActionType;
+import net.minecraft.item.Items;
+import net.minecraft.util.Hand;
 
-/** Автоматически ест любую еду из инвентаря при голоде 16/20 или ниже. */
+/** Ест безопасную еду из хотбара при голоде 16/20 или ниже. Не использует useKey. */
 public final class AutoEat {
+    private static final int THRESHOLD = 16;
     private static int restoreSlot = -1;
+    private static int idleTicks;
+    private static int cooldown;
 
     private AutoEat() {}
 
-    public static boolean tick(MinecraftClient mc) {
-        ClientPlayerEntity player = mc.player;
-        if (player == null) {
-            release(mc);
-            return false;
+    public static boolean isSafeFood(ItemStack s) {
+        if (s.isEmpty()) return false;
+        FoodComponent f = s.getItem().getFoodComponent();
+        if (f == null) return false;
+        if (s.isOf(Items.CHORUS_FRUIT) || s.isOf(Items.SUSPICIOUS_STEW)
+                || s.isOf(Items.GOLDEN_APPLE) || s.isOf(Items.ENCHANTED_GOLDEN_APPLE)) return false;
+        for (Pair<StatusEffectInstance, Float> e : f.getStatusEffects()) {
+            if (e.getFirst().getEffectType().getCategory() == StatusEffectCategory.HARMFUL) return false;
         }
+        return true;
+    }
 
-        int hunger = player.getHungerManager().getFoodLevel();
+    public static boolean tick(MinecraftClient mc) {
+        ClientPlayerEntity p = mc.player;
+        if (p == null || mc.interactionManager == null) { release(mc); return false; }
+        if (cooldown > 0) cooldown--;
+        int hunger = p.getHungerManager().getFoodLevel();
+
         if (restoreSlot >= 0) {
-            ItemStack held = player.getMainHandStack();
-            if (hunger > 16 || !held.isFood() || mc.currentScreen != null) {
-                release(mc);
-                return false;
-            }
-            mc.options.useKey.setPressed(true);
+            if (p.isUsingItem()) { idleTicks = 0; return true; }
+            if (hunger > THRESHOLD || !isSafeFood(p.getMainHandStack())) { release(mc); return false; }
+            if (++idleTicks > 20) { release(mc); cooldown = 200; return false; }
+            mc.interactionManager.interactItem(p, Hand.MAIN_HAND);
             return true;
         }
 
-        if (hunger > 16 || mc.currentScreen != null || mc.interactionManager == null) return false;
-
-        int foodSlot = -1;
+        if (cooldown > 0 || hunger > THRESHOLD || mc.currentScreen != null) return false;
+        int slot = -1;
         for (int i = 0; i < 9; i++) {
-            if (player.getInventory().getStack(i).isFood()) {
-                foodSlot = i;
-                break;
-            }
+            if (isSafeFood(p.getInventory().getStack(i))) { slot = i; break; }
         }
+        if (slot < 0) return false;
 
-        if (foodSlot < 0) {
-            for (int i = 9; i < 36; i++) {
-                if (player.getInventory().getStack(i).isFood()) {
-                    foodSlot = i;
-                    break;
-                }
-            }
-            if (foodSlot >= 9) {
-                int selected = player.getInventory().selectedSlot;
-                mc.interactionManager.clickSlot(player.playerScreenHandler.syncId,
-                        foodSlot, selected, SlotActionType.SWAP, player);
-                foodSlot = selected;
-            }
-        }
-
-        if (foodSlot < 0) return false;
-
-        restoreSlot = player.getInventory().selectedSlot;
-        player.getInventory().selectedSlot = foodSlot;
-        mc.options.useKey.setPressed(true);
+        restoreSlot = p.getInventory().selectedSlot;
+        p.getInventory().selectedSlot = slot;
+        idleTicks = 0;
+        mc.interactionManager.interactItem(p, Hand.MAIN_HAND);
         return true;
     }
 
     public static void release(MinecraftClient mc) {
-        mc.options.useKey.setPressed(false);
-        if (mc.player != null && restoreSlot >= 0) {
-            mc.player.getInventory().selectedSlot = restoreSlot;
+        if (mc.player != null) {
+            if (mc.player.isUsingItem() && mc.interactionManager != null) {
+                mc.interactionManager.stopUsingItem(mc.player);
+            }
+            if (restoreSlot >= 0) mc.player.getInventory().selectedSlot = restoreSlot;
         }
         restoreSlot = -1;
+        idleTicks = 0;
     }
 }
