@@ -61,6 +61,11 @@ public final class TurtleRegistry {
         if (r.baby != baby) { r.baby = baby; dirty = true; }
         r.lastSeen = now;
     }
+    public synchronized boolean wasFed(UUID id) {
+        TurtleRecord r = data.turtles.get(id.toString());
+        return r != null && r.lastFed > 0;
+    }
+
     public synchronized boolean canFeed(UUID id, long now) {
         TurtleRecord r = data.turtles.get(id.toString());
         if (r == null) return true;
