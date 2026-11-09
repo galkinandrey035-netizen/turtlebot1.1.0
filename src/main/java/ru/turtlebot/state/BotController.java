@@ -13,6 +13,7 @@ import ru.turtlebot.config.BotConfig;
 import ru.turtlebot.config.ConfigManager;
 import ru.turtlebot.data.TurtleRegistry;
 import ru.turtlebot.nav.Navigator;
+import ru.turtlebot.nav.Keys;
 import ru.turtlebot.util.BotLog;
 import ru.turtlebot.util.Geo;
 
@@ -44,6 +45,8 @@ public final class BotController {
     public boolean isActive() {
         return state != BotState.IDLE && state != BotState.FINISHED && state != BotState.ERROR;
     }
+
+    public boolean isPaused() { return paused; }
 
     public String start() {
         MinecraftClient mc = MinecraftClient.getInstance();
@@ -103,6 +106,7 @@ public final class BotController {
     }
 
     public List<BlockPos> currentPath() { return nav.currentPath(); }
+    public List<BlockPos> route() { return nav.currentPath(); }
 
     public List<String> status() {
         List<String> l = new ArrayList<>();
@@ -116,6 +120,8 @@ public final class BotController {
         l.add("Радиус поиска: " + cfg().radius);
         l.add("Черепах в базе: " + registry.size() + ", готовы к кормлению: " + registry.readyCount(System.currentTimeMillis()));
         l.add("Покормлено за сессию: " + totalFed + ", походов за травой: " + restocks);
+        long next = registry.nextReadyInMs(System.currentTimeMillis());
+        if (next >= 0) l.add("До следующего кормления: " + (next / 60000) + ":" + String.format("%02d", (next / 1000) % 60));
         return l;
     }
 
@@ -193,7 +199,12 @@ public final class BotController {
         }
         mc.options.attackKey.setPressed(false);
         mc.options.jumpKey.setPressed(false);
-        if (AutoEat.tick(mc)) return;
+        if (AutoEat.tick(mc)) {
+            nav.releaseMovement(mc);
+            enterTick++;
+            if (stageTick >= 0) stageTick++;
+            return;
+        }
         try {
             switch (state) {
                 case TELEPORT_HOME -> tickTeleportHome(mc);
@@ -351,7 +362,7 @@ public final class BotController {
     }
 
     private void tickApproach(MinecraftClient mc) {
-        if (target == null || !target.isAlive() || target.isRemoved() || target.isBaby()) {
+        if (target == null || !target.isAlive() || target.isRemoved() || target.isBaby() || target.hasEgg()) {
             target = null;
             setState(BotState.SCAN_TURTLES);
             return;
@@ -370,6 +381,12 @@ public final class BotController {
         switch (r) {
             case NEED_APPROACH -> setState(BotState.APPROACH_TURTLE);
             case DONE -> {
+                if (target == null || !target.isAlive() || target.isRemoved() || target.isBaby() || target.hasEgg()) {
+                    BotLog.warn("Результат кормления отброшен: цель не является взрослой черепахой без кладки");
+                    target = null;
+                    setState(BotState.SCAN_TURTLES);
+                    return;
+                }
                 registry.markFed(target.getUuid(), System.currentTimeMillis());
                 FedTurtleHighlighter.apply(target);
                 totalFed++;
