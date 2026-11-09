@@ -110,7 +110,7 @@ public final class FeedHandler {
 
                 ActionResult result = mc.interactionManager.interactEntityAtLocation(
                         player, turtle, hit, Hand.MAIN_HAND);
-                if (!result.isAccepted()) {
+                if (result == ActionResult.PASS) {
                     // Match vanilla's right-click fallback: generic entity interaction after interact-at returns PASS.
                     result = mc.interactionManager.interactEntity(player, turtle, Hand.MAIN_HAND);
                 }
