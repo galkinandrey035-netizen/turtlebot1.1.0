@@ -54,7 +54,7 @@ public final class PathFollower {
         // Сначала довернуть корпус на месте, затем идти прямо к следующей точке.\n        // Это не даёт инерции движения превращать поворот в бег по кругу.\n        Keys.walk(mc, Math.abs(diff) < 12f);
 
         Vec3d pos = p.getPos();
-        if (lastPos != null && pos.squaredDistanceTo(lastPos) < 0.0004) stillTicks++; else stillTicks = 0;
+        if (Math.abs(diff) >= 12f) stillTicks = 0;\n        else if (lastPos != null && pos.squaredDistanceTo(lastPos) < 0.0004) stillTicks++;\n        else stillTicks = 0;
         lastPos = pos;
         nodeTicks++;
         if (stillTicks >= 25 || nodeTicks > 60) { Keys.release(mc); return Status.STUCK; }
