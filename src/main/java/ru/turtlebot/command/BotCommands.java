@@ -16,6 +16,7 @@ import ru.turtlebot.config.ConfigManager;
 import ru.turtlebot.data.TurtleRegistry;
 import ru.turtlebot.state.BotController;
 import ru.turtlebot.util.BotLog;
+import ru.turtlebot.util.FedTurtleHighlighter;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
@@ -68,6 +69,15 @@ public final class BotCommands {
                                     : "Сундук не задан");
                             return 1;
                         })))
+                .then(literal("glow").executes(c -> {
+                    FedTurtleHighlighter.enabled = !FedTurtleHighlighter.enabled;
+                    BotLog.reply("Подсветка черепах: " + (FedTurtleHighlighter.enabled ? "вкл" : "выкл")); return 1; }))
+                .then(literal("timers").executes(c -> {
+                    FedTurtleHighlighter.labels = !FedTurtleHighlighter.labels;
+                    BotLog.reply("Таймеры над черепахами: " + (FedTurtleHighlighter.labels ? "вкл" : "выкл")); return 1; }))
+                .then(literal("route").executes(c -> {
+                    ru.turtlebot.render.PathRenderer.enabled = !ru.turtlebot.render.PathRenderer.enabled;
+                    BotLog.reply("Показ маршрута: " + (ru.turtlebot.render.PathRenderer.enabled ? "вкл" : "выкл")); return 1; }))
                 .then(literal("radius")
                         .executes(c -> { BotLog.reply("Радиус поиска: " + ConfigManager.get().radius); return 1; })
                         .then(argument("n", IntegerArgumentType.integer(4, 64)).executes(c -> {
@@ -81,6 +91,7 @@ public final class BotCommands {
     private static void help() {
         BotLog.reply("§6/turtlebot§r start | stop | pause | resume | status | reload | clear");
         BotLog.reply("§6/turtlebot§r chest set [x y z] | chest show | radius [4-64]");
+        BotLog.reply("§6/turtlebot§r glow | timers | route");
     }
 
     private static int setChestLook(CommandContext<FabricClientCommandSource> c) {
