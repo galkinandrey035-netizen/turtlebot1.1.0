@@ -8,6 +8,7 @@
     "EntityPushMixin",
     "MultiTaskMixin",
     "ChorusControlMixin",
+    "NoTraceMixin",
     "accessor.ClientPlayerInteractionManagerAccessor",
     "accessor.LivingEntityAccessor",
     "accessor.MinecraftClientAccessor",

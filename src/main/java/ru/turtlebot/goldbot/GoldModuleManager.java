@@ -36,6 +36,7 @@ public final class GoldModuleManager {
         register(new ItemScrollerModule());
         register(new MultiTaskModule());
         register(new ChorusControlModule());
+        register(new NoTraceModule());
     }
     private GoldModuleManager() {}
     private static void register(GoldModule module) { MODULES.put(module.name().toLowerCase(Locale.ROOT), module); }
