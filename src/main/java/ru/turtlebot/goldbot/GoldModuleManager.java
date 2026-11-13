@@ -2,6 +2,8 @@ package ru.turtlebot.goldbot;
 
 import net.minecraft.client.MinecraftClient;
 import ru.turtlebot.goldbot.modules.AntiAfkModule;
+import ru.turtlebot.goldbot.modules.AirStuckModule;
+import ru.turtlebot.goldbot.modules.SpeedModule;
 import ru.turtlebot.goldbot.modules.AutoSwapModule;
 import ru.turtlebot.goldbot.modules.TriggerBotModule;
 import ru.turtlebot.goldbot.modules.NoFriendDamageModule;
@@ -43,6 +45,8 @@ public final class GoldModuleManager {
         register(new TriggerBotModule());
         register(new NoFriendDamageModule());
         register(new NoInteractModule());
+        register(new AirStuckModule());
+        register(new SpeedModule());
     }
 
     private GoldModuleManager() {}
