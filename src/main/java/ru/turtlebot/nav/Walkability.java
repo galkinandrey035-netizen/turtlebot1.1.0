@@ -42,7 +42,7 @@ public final class Walkability {
     }
 
     public boolean passable(BlockPos p) {
-        if (p.getY() < world.getBottomY() || p.getY() >= world.getTopY()) return false;
+        if (p.getY() < world.getBottomY() || p.getY() >= world.getBottomY() + world.getHeight()) return false;
         if (!world.getChunkManager().isChunkLoaded(p.getX() >> 4, p.getZ() >> 4)) return false;
         BlockState s = world.getBlockState(p);
         return s.getCollisionShape(world, p).isEmpty()
