@@ -332,8 +332,16 @@ public final class BotController {
             retries = 0;
             waitStartMs = 0;
             restocks++;
-            if (InventoryUtil.countSeagrass(mc.player) == 0) finish("сундук пуст, травы нет");
-            else setState(BotState.SCAN_TURTLES);
+            if (InventoryUtil.countSeagrass(mc.player) == 0) {
+                if (chestDrained) {
+                    finish("сундук пуст, травы нет");
+                } else {
+                    fail("не удалось забрать морскую траву: в сундуке ещё осталось "
+                            + chest.remaining + ", но в инвентаре нет места");
+                }
+            } else {
+                setState(BotState.SCAN_TURTLES);
+            }
         }
     }
 
