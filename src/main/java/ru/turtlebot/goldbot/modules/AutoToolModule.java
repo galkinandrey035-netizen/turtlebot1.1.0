@@ -27,8 +27,8 @@ public final class AutoToolModule extends GoldModule {
 
         BlockPos pos = hit.getBlockPos();
         if (!pos.equals(target)) {
+            if (originalSlot < 0) originalSlot = player.getInventory().getSelectedSlot();
             target = pos.toImmutable();
-            originalSlot = player.getInventory().getSelectedSlot();
         }
 
         var state = client.world.getBlockState(pos);
