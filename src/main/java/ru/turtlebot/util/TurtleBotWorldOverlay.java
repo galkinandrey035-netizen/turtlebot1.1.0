@@ -9,7 +9,6 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.passive.TurtleEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import ru.turtlebot.TurtleBotClient;
 import ru.turtlebot.data.TurtleRegistry;
@@ -18,10 +17,7 @@ import ru.turtlebot.state.BotController;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Рисует текущий маршрут бота и таймер повторного кормления над ранее
- * накормленными черепахами. Только клиентская визуализация.
- */
+/** Клиентская визуализация маршрута и таймера повторного кормления. */
 public final class TurtleBotWorldOverlay {
     private TurtleBotWorldOverlay() {}
 
@@ -73,14 +69,11 @@ public final class TurtleBotWorldOverlay {
     }
 
     private static void drawLine(VertexConsumer consumer, MatrixStack.Entry entry,
-                                 double x1, double y1, double z1,
-                                 double x2, double y2, double z2) {
-        consumer.vertex(entry.getPositionMatrix(), (float) x1, (float) y1, (float) z1)
-                .color(0.15f, 0.85f, 1.0f, 0.95f)
-                .normal(entry.getNormalMatrix(), 0.0f, 1.0f, 0.0f).next();
-        consumer.vertex(entry.getPositionMatrix(), (float) x2, (float) y2, (float) z2)
-                .color(0.15f, 0.85f, 1.0f, 0.95f)
-                .normal(entry.getNormalMatrix(), 0.0f, 1.0f, 0.0f).next();
+                                 double x1, double y1, double z1, double x2, double y2, double z2) {
+        consumer.vertex(entry, (float) x1, (float) y1, (float) z1)
+                .color(0.15f, 0.85f, 1.0f, 0.95f).normal(entry, 0.0f, 1.0f, 0.0f);
+        consumer.vertex(entry, (float) x2, (float) y2, (float) z2)
+                .color(0.15f, 0.85f, 1.0f, 0.95f).normal(entry, 0.0f, 1.0f, 0.0f);
     }
 
     private static void drawCooldownLabels(WorldRenderContext context, Vec3d camera) {
@@ -91,7 +84,7 @@ public final class TurtleBotWorldOverlay {
         List<TurtleEntity> turtles = mc.world.getEntitiesByClass(TurtleEntity.class,
                 mc.player.getBoundingBox().expand(48.0),
                 turtle -> turtle.isAlive() && registry.wasFed(turtle.getUuid()));
-        var matrices = context.matrixStack();
+        MatrixStack matrices = context.matrixStack();
         VertexConsumerProvider consumers = context.consumers();
 
         for (TurtleEntity turtle : turtles) {
