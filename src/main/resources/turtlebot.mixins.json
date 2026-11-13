@@ -14,7 +14,8 @@
     "GoldBotAmbienceMixin",
     "GoldBotProjectionMixin",
     "GoldBotHeldItemMixin",
-    "GoldBotItemPhysicsMixin"
+    "GoldBotItemPhysicsMixin",
+    "GoldBotDarkGlassWidgetsMixin"
   ],
   "injectors": {
     "defaultRequire": 1
