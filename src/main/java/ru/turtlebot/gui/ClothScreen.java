@@ -53,6 +53,23 @@ final class ClothScreen {
         t.addEntry(e.startIntField(Text.literal("Макс. ожидание таймеров"), c.maxWaitCooldownSeconds)
                 .setDefaultValue(900).setMin(30).setMax(7200).setSaveConsumer(v -> c.maxWaitCooldownSeconds = v).build());
 
+
+        ConfigCategory safety = b.getOrCreateCategory(Text.literal("AutoLeave / AutoJoin"));
+        safety.addEntry(e.startBooleanToggle(Text.literal("Включить постоянный AutoLeave"), c.autoLeaveEnabled)
+                .setDefaultValue(false).setSaveConsumer(v -> c.autoLeaveEnabled = v).build());
+        safety.addEntry(e.startBooleanToggle(Text.literal("Выход при обнаружении игроков"), c.autoLeavePlayers)
+                .setDefaultValue(true).setSaveConsumer(v -> c.autoLeavePlayers = v).build());
+        safety.addEntry(e.startBooleanToggle(Text.literal("Выход при обнаружении сотрудников"), c.autoLeaveStaff)
+                .setDefaultValue(true).setSaveConsumer(v -> c.autoLeaveStaff = v).build());
+        safety.addEntry(e.startDoubleField(Text.literal("Радиус обнаружения игроков"), c.autoLeaveMaxDistance)
+                .setDefaultValue(10.0).setMin(5.0).setMax(40.0).setSaveConsumer(v -> c.autoLeaveMaxDistance = v).build());
+        safety.addEntry(e.startBooleanToggle(Text.literal("После срабатывания отправлять в хаб"), c.autoLeaveToHub)
+                .setDefaultValue(true).setSaveConsumer(v -> c.autoLeaveToHub = v).build());
+        safety.addEntry(e.startStrField(Text.literal("AutoJoin: команда входа (например /g2)"), c.autoJoinCommand)
+                .setDefaultValue("g2").setSaveConsumer(v -> c.autoJoinCommand = v).build());
+        safety.addEntry(e.startIntField(Text.literal("AutoJoin: задержка после хаба, с"), c.autoJoinDelaySeconds)
+                .setDefaultValue(15).setMin(1).setMax(600).setSaveConsumer(v -> c.autoJoinDelaySeconds = v).build());
+
         return b.build();
     }
 }
