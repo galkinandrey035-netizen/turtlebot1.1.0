@@ -16,7 +16,7 @@ public abstract class GoldBotHeldItemMixin {
     @Unique
     private boolean turtlebot$viewModelPushed;
 
-    @Inject(method = "renderItem", at = @At("HEAD"))
+    @Inject(method = "renderItem(FLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider$Immediate;Lnet/minecraft/client/network/ClientPlayerEntity;I)V", at = @At("HEAD"))
     private void turtlebot$applyViewModel(float tickDelta, MatrixStack matrices,
                                           VertexConsumerProvider.Immediate vertexConsumers,
                                           ClientPlayerEntity player, int light, CallbackInfo ci) {
@@ -27,7 +27,7 @@ public abstract class GoldBotHeldItemMixin {
         turtlebot$viewModelPushed = true;
     }
 
-    @Inject(method = "renderItem", at = @At("RETURN"))
+    @Inject(method = "renderItem(FLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider$Immediate;Lnet/minecraft/client/network/ClientPlayerEntity;I)V", at = @At("RETURN"))
     private void turtlebot$restoreViewModel(float tickDelta, MatrixStack matrices,
                                             VertexConsumerProvider.Immediate vertexConsumers,
                                             ClientPlayerEntity player, int light, CallbackInfo ci) {
