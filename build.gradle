@@ -87,6 +87,7 @@ tasks.named("jar", Jar) {
     // Original GoldBot UI, font and cosmetic resources are preserved verbatim.
     from("goldbot") {
         into "goldbot"
+        exclude "cosmetics/**"
     }
 }
 
