@@ -258,13 +258,25 @@ public final class BotController {
         ClientPlayerEntity p = mc.player;
         boolean moved = p != homeStartPlayer || p.getPos().squaredDistanceTo(homeStartPos) > 4.0;
         if (moved && stageTick < 0) stageTick = tickNow;
-        if (moved && tickNow - stageTick >= cfg().afterTeleportDelayTicks && chestLoaded(mc)) {
-            BotLog.info("Телепорт выполнен");
-            setState(BotState.PATH_TO_CHEST);
-            return;
+        if (moved && tickNow - stageTick >= cfg().afterTeleportDelayTicks) {
+            if (!dimensionOk(mc)) {
+                fail("телепорт выполнен не в том измерении: ожидалось " + cfg().chestDimension
+                        + ", текущее " + mc.world.getRegistryKey().getValue());
+                return;
+            }
+            if (chestLoaded(mc)) {
+                BotLog.info("Телепорт выполнен");
+                setState(BotState.PATH_TO_CHEST);
+                return;
+            }
         }
         if (!moved && timedOut(cfg().teleportTimeoutSeconds)) {
-            boolean near = dimensionOk(mc) && chestLoaded(mc)
+            if (!dimensionOk(mc)) {
+                fail("команда /" + cfg().homeCommand + " не привела в измерение сундука ("
+                        + cfg().chestDimension + ")");
+                return;
+            }
+            boolean near = chestLoaded(mc)
                     && p.getPos().distanceTo(Vec3d.ofCenter(chestPos())) <= cfg().maxPathRange;
             if (near) {
                 BotLog.info("Позиция не изменилась — считаю, что бот уже дома");
