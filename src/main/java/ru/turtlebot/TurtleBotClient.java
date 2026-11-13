@@ -10,22 +10,22 @@ import net.minecraft.util.ActionResult;
 import ru.turtlebot.command.BotCommands;
 import ru.turtlebot.config.ConfigManager;
 import ru.turtlebot.data.TurtleRegistry;
-import ru.turtlebot.state.BotController;
+import ru.turtlebot.state.BotController;\nimport ru.turtlebot.state.AutoSafetyController;
 import ru.turtlebot.util.BotLog;
 
 public final class TurtleBotClient implements ClientModInitializer {
     private static BotController controller;
-    private static TurtleRegistry registry;
+    private static TurtleRegistry registry;\n    private static AutoSafetyController safetyController;
     public static BotController controller() { return controller; }
     @Override
     public void onInitializeClient() {
         ConfigManager.load();
         registry = new TurtleRegistry();
         registry.load();
-        controller = new BotController(registry);
+        controller = new BotController(registry);\n        safetyController = new AutoSafetyController();
         ClientCommandRegistrationCallback.EVENT.register(
                 (dispatcher, access) -> BotCommands.register(dispatcher, controller, registry));
-        ClientTickEvents.END_CLIENT_TICK.register(controller::tick);
+        ClientTickEvents.END_CLIENT_TICK.register(mc -> {\n            controller.tick(mc);\n            safetyController.tick(mc);\n        });
         ClientPlayConnectionEvents.DISCONNECT.register((h, c) -> controller.stop("отключение от сервера"));
         ClientLifecycleEvents.CLIENT_STOPPING.register(c -> {
             controller.stop("закрытие клиента");
