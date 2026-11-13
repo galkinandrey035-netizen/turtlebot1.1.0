@@ -7,6 +7,8 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 import ru.turtlebot.config.BotConfig;
 import ru.turtlebot.config.ConfigManager;
+import ru.turtlebot.TurtleBotClient;
+import ru.turtlebot.util.BotLog;
 
 final class ClothScreen {
     private ClothScreen() {}
@@ -18,6 +20,25 @@ final class ClothScreen {
                 .setTitle(Text.literal("TurtleBot — настройки"))
                 .setSavingRunnable(() -> { c.sanitize(); ConfigManager.save(); });
         ConfigEntryBuilder e = b.entryBuilder();
+
+        ConfigCategory misc = b.getOrCreateCategory(Text.literal("Misc"));
+        misc.addEntry(e.startBooleanToggle(Text.literal("TurtleBot — включён"), c.enabled)
+                .setDefaultValue(false).setSaveConsumer(v -> {
+                    c.enabled = v;
+                    if (TurtleBotClient.controller() != null) {
+                        if (v) {
+                            String error = TurtleBotClient.controller().start();
+                            if (error != null) {
+                                c.enabled = false;
+                                BotLog.reply("§c" + error);
+                            }
+                        } else {
+                            TurtleBotClient.controller().stop("выключено в настройках Misc");
+                        }
+                    }
+                }).build());
+        misc.addEntry(e.startBooleanToggle(Text.literal("Не останавливаться при смене мира"), c.continueOnWorldChange)
+                .setDefaultValue(false).setSaveConsumer(v -> c.continueOnWorldChange = v).build());
 
         ConfigCategory g = b.getOrCreateCategory(Text.literal("Основные"));
         g.addEntry(e.startStrField(Text.literal("Команда телепорта (без /)"), c.homeCommand)
