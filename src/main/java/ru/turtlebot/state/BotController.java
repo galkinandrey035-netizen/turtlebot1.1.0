@@ -54,6 +54,8 @@ public final class BotController {
         if (mc.player == null || mc.world == null) return "Вы не в мире";
         if (!cfg().chestSet) return "Сундук не задан. Используйте /turtlebot chest set";
         retries = 0; totalFed = 0; restocks = 0;
+        cfg().enabled = true;
+        ConfigManager.save();
         chestDrained = false; paused = false; target = null; waitStartMs = 0;
         BotLog.say("Бот запущен");
         setState(BotState.TELEPORT_HOME);
@@ -65,8 +67,20 @@ public final class BotController {
         cleanup();
         state = BotState.IDLE;
         paused = false;
+        cfg().enabled = false;
+        ConfigManager.save();
         registry.save();
         if (was) BotLog.say("Бот остановлен: " + reason);
+    }
+
+    public void prepareForWorldChange() {
+        if (!isActive() && !paused) return;
+        cleanup();
+        state = BotState.IDLE;
+        paused = false;
+        target = null;
+        registry.save();
+        BotLog.info("Мир сменился: состояние сброшено, ожидаю новое подключение");
     }
 
     public void pause() {
@@ -84,6 +98,8 @@ public final class BotController {
 
     private void finish(String msg) {
         cleanup();
+        cfg().enabled = false;
+        ConfigManager.save();
         state = BotState.FINISHED;
         registry.save();
         BotLog.say("Работа завершена: " + msg + ". Покормлено за сессию: " + totalFed);
@@ -91,6 +107,8 @@ public final class BotController {
 
     private void fail(String msg) {
         cleanup();
+        cfg().enabled = false;
+        ConfigManager.save();
         state = BotState.ERROR;
         registry.save();
         BotLog.error("Остановка из-за ошибки: " + msg);
