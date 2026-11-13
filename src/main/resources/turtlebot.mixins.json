@@ -6,7 +6,10 @@
   "client": [
     "EntityGlowMixin",
     "GoldBotCleanupMixin",
-    "GoldBotClickGuiCleanupMixin"
+    "GoldBotClickGuiCleanupMixin",
+    "GoldBotStatsRelocationMixin"
   ],
-  "injectors": { "defaultRequire": 1 }
+  "injectors": {
+    "defaultRequire": 1
+  }
 }
