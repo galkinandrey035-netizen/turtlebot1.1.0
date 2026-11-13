@@ -1,6 +1,7 @@
 package ru.turtlebot.mixin;
 
 import net.minecraft.client.MinecraftClient;
+import ru.turtlebot.config.ConfigManager;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Item;
@@ -39,6 +40,18 @@ public abstract class GoldBotStatsRelocationMixin {
      */
     @Overwrite(remap = false)
     private void drawStats(DrawContext context) { }
+
+    @Inject(method = "visualPage", at = @At("TAIL"), remap = false)
+    private void turtlebot$addTargetHudCard(CallbackInfo ci) {
+        beginCard(0, Items.PLAYER_HEAD, "TargetHUD",
+                () -> ConfigManager.get().targetHudEnabled,
+                enabled -> {
+                    ConfigManager.get().targetHudEnabled = enabled;
+                    ConfigManager.save();
+                });
+        note("Показывает имя и здоровье последней атакованной цели.");
+        endCard();
+    }
 
     @Inject(method = "helperTab", at = @At("TAIL"), remap = false)
     private void turtlebot$appendGoldBotStats(CallbackInfo ci) {
