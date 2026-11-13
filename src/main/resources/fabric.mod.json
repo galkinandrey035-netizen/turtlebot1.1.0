@@ -12,6 +12,9 @@
     "modmenu": ["ru.turtlebot.gui.ModMenuIntegration"]
   },
   "mixins": ["turtlebot.mixins.json"],
+  "jars": [
+    { "file": "META-INF/jars/baritone-api-fabric-1.13.1.jar" }
+  ],
   "depends": {
     "fabricloader": ">=0.16.9",
     "minecraft": "~1.21.4",

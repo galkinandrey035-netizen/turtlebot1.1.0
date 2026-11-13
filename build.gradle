@@ -20,8 +20,31 @@ loom {
     }
 }
 
+def baritoneApiJar = layout.buildDirectory.file("downloaded-libs/baritone-api-fabric-1.13.1.jar")
+
+tasks.register("downloadBaritoneApi") {
+    outputs.file(baritoneApiJar)
+    doLast {
+        File target = baritoneApiJar.get().asFile
+        String expectedSha256 = "bfb79c3cdb8fe1f7697999b1f9c7f08ea29775f3b69d48ad90c387690ee67b05"
+        if (!target.exists()) {
+            target.parentFile.mkdirs()
+            new URL("https://github.com/cabaletta/baritone/releases/download/v1.13.1/baritone-api-fabric-1.13.1.jar").withInputStream { input ->
+                target.withOutputStream { output -> output << input }
+            }
+        }
+        String actualSha256 = java.security.MessageDigest.getInstance("SHA-256")
+                .digest(target.bytes).encodeHex().toString()
+        if (actualSha256 != expectedSha256) {
+            target.delete()
+            throw new GradleException("Baritone API SHA-256 mismatch: " + actualSha256)
+        }
+    }
+}
+
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    modImplementation files(baritoneApiJar)
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
@@ -37,9 +60,24 @@ processResources {
     filesMatching('fabric.mod.json') { expand 'version': project.version }
 }
 
+tasks.named("compileJava") { dependsOn tasks.named("downloadBaritoneApi") }
+
 tasks.withType(JavaCompile).configureEach {
     options.release = 21
     options.encoding = 'UTF-8'
+}
+
+tasks.named("jar", Jar) {
+    dependsOn tasks.named("downloadBaritoneApi")
+    // Original GoldBot bytecode is vendored unchanged; only bundled into the final client.
+    from(zipTree("libs/goldbot-bytecode.jar")) {
+        include "dev/**/*.class"
+    }
+    // Baritone API for Minecraft 1.21.4, nested as a separate Fabric mod.
+    from(baritoneApiJar) {
+        into "META-INF/jars"
+        rename { "baritone-api-fabric-1.13.1.jar" }
+    }
 }
 
 java {
