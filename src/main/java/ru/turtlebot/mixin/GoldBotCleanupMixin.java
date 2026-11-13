@@ -29,6 +29,7 @@ public abstract class GoldBotCleanupMixin {
                     "hitBubbles",
                     "wings",
                     "trailLine",
+                    "jumpParticles",
                     "cosmetics"
             };
             for (String fieldName : disabled) {
