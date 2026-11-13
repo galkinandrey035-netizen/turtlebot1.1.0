@@ -15,12 +15,12 @@ public final class ItemFixSwapModule extends GoldModule {
     public ItemFixSwapModule() { super("ItemFixSwap", "Player"); instance = this; }
 
     @Override protected void onEnable(MinecraftClient client) {
-        serverSlot = client.player == null ? -1 : client.player.getInventory().getSelectedSlot();
+        serverSlot = client.player == null ? -1 : client.player.getInventory().selectedSlot;
     }
 
     @Override protected void onDisable(MinecraftClient client) {
         if (client.player != null && client.getNetworkHandler() != null) {
-            int slot = client.player.getInventory().getSelectedSlot();
+            int slot = client.player.getInventory().selectedSlot;
             client.getNetworkHandler().getConnection().send(new UpdateSelectedSlotC2SPacket(slot));
             serverSlot = slot;
         }
@@ -36,7 +36,7 @@ public final class ItemFixSwapModule extends GoldModule {
         if (instance == null || !instance.enabled() || syncing || !isAction(packet)) return;
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.player == null) return;
-        int selected = client.player.getInventory().getSelectedSlot();
+        int selected = client.player.getInventory().selectedSlot;
         if (selected == instance.serverSlot) return;
         syncing = true;
         try {
