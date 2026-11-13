@@ -14,20 +14,23 @@ import ru.turtlebot.util.BotLog;
 
 
 /**
- * Adds TurtleBot controls to the original GoldBot ClickGUI without changing
- * any class or behavior inside dev.goldbot.*.
+ * Adds TurtleBot controls to the existing client ClickGUI without modifying
+ * any original GoldBot classes.
  */
 public final class TurtleBotClickGuiBridge {
     private static final int BUTTON_WIDTH = 58;
     private static final int BUTTON_HEIGHT = 16;
     private static final int GAP = 3;
-    private static final String TARGET_SCREEN = "aethereal.ClickGuiScreen";
+    private static final String[] TARGET_SCREENS = {
+            "aethereal.ClickGuiScreen",
+            "dev.goldbot.ClickGuiScreen"
+    };
 
     private TurtleBotClickGuiBridge() {}
 
     public static void register() {
         ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
-            if (!TARGET_SCREEN.equals(screen.getClass().getName())) return;
+            if (!isTargetScreen(screen)) return;
 
             ScreenEvents.afterRender(screen).register((current, context, mouseX, mouseY, tickDelta) ->
                     render(client, current, context, mouseX, mouseY));
@@ -81,6 +84,14 @@ public final class TurtleBotClickGuiBridge {
         String chest = ConfigManager.get().chestSet ? "chest set" : "chest missing";
         context.drawText(client.textRenderer, Text.literal("TurtleBot: " + state + " | " + chest),
                 origin[0], origin[1] + BUTTON_HEIGHT + 3, 0xFFB8DCC5, false);
+    }
+
+    private static boolean isTargetScreen(Screen screen) {
+        String className = screen.getClass().getName();
+        for (String target : TARGET_SCREENS) {
+            if (target.equals(className)) return true;
+        }
+        return false;
     }
 
     private static int[] origin(Screen screen) {
