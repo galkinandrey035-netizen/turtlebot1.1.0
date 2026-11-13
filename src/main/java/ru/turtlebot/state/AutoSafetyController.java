@@ -84,6 +84,9 @@ public final class AutoSafetyController {
 
     private boolean looksLikeStaff(String displayName) {
         String value = displayName.toLowerCase(Locale.ROOT);
+        for (String prefix : ConfigManager.get().staffPrefixes) {
+            if (prefix != null && !prefix.isBlank() && value.contains(prefix.toLowerCase(Locale.ROOT))) return true;
+        }
         String[] markers = {
                 "админ", "модер", "хелпер", "куратор", "владелец", "сотрудник",
                 "admin", "moder", "helper", "staff", "owner", "curator"
