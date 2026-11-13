@@ -7,7 +7,14 @@
     "EntityGlowMixin",
     "GoldBotCleanupMixin",
     "GoldBotClickGuiCleanupMixin",
-    "GoldBotStatsRelocationMixin"
+    "GoldBotStatsRelocationMixin",
+    "GoldBotCameraMixin",
+    "GoldBotFogMixin",
+    "GoldBotSkyMixin",
+    "GoldBotAmbienceMixin",
+    "GoldBotProjectionMixin",
+    "GoldBotHeldItemMixin",
+    "GoldBotItemPhysicsMixin"
   ],
   "injectors": {
     "defaultRequire": 1
