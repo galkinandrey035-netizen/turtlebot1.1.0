@@ -23,7 +23,7 @@ public abstract class GoldBotHeldItemMixin {
         turtlebot$viewModelPushed = false;
         if (!ViewModel.active()) return;
         matrices.push();
-        ViewModel.apply(matrices);
+        GoldBotRuntime.viewModelApply(matrices);
         turtlebot$viewModelPushed = true;
     }
 
