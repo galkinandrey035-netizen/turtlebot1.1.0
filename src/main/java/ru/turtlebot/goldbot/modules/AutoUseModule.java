@@ -3,7 +3,7 @@ package ru.turtlebot.goldbot.modules;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.Items;
-import net.minecraft.potion.PotionContentsComponent;
+import net.minecraft.component.type.PotionContentsComponent;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.util.Hand;
 import ru.turtlebot.goldbot.GoldModule;
