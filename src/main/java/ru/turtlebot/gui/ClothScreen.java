@@ -10,10 +10,10 @@ import ru.turtlebot.config.ConfigManager;
 import ru.turtlebot.TurtleBotClient;
 import ru.turtlebot.util.BotLog;
 
-final class ClothScreen {
+public final class ClothScreen {
     private ClothScreen() {}
 
-    static Screen build(Screen parent) {
+    public static Screen build(Screen parent) {
         BotConfig c = ConfigManager.get();
         ConfigBuilder b = ConfigBuilder.create()
                 .setParentScreen(parent)
