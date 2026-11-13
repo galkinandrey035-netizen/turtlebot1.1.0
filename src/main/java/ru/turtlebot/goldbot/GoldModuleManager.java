@@ -34,6 +34,7 @@ public final class GoldModuleManager {
         register(new NoDelayModule());
         register(new NoPushModule());
         register(new ItemScrollerModule());
+        register(new MultiTaskModule());
     }
     private GoldModuleManager() {}
     private static void register(GoldModule module) { MODULES.put(module.name().toLowerCase(Locale.ROOT), module); }

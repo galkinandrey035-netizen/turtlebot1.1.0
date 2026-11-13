@@ -6,6 +6,7 @@
   "client": [
     "EntityGlowMixin",
     "EntityPushMixin",
+    "MultiTaskMixin",
     "accessor.ClientPlayerInteractionManagerAccessor",
     "accessor.LivingEntityAccessor",
     "accessor.MinecraftClientAccessor",
