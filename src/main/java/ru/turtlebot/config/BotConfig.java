@@ -15,6 +15,10 @@ public final class BotConfig {
     public String autoJoinCommand = "g2";
     public int autoJoinDelaySeconds = 15;
     public List<String> staffPrefixes = new ArrayList<>();
+    public List<String> staffNames = new ArrayList<>();
+    public List<String> friendNames = new ArrayList<>();
+    public List<String> espBlockIds = new ArrayList<>();
+    public java.util.Map<String, String> macros = new java.util.LinkedHashMap<>();
     public boolean chestSet = false;
     public String chestDimension = "";
     public int chestX = 0, chestY = 0, chestZ = 0;
@@ -51,6 +55,10 @@ public final class BotConfig {
         if (chestDimension == null) chestDimension = "";
         if (autoJoinCommand == null) autoJoinCommand = "g2";
         if (staffPrefixes == null) staffPrefixes = new ArrayList<>();
+        if (staffNames == null) staffNames = new ArrayList<>();
+        if (friendNames == null) friendNames = new ArrayList<>();
+        if (espBlockIds == null) espBlockIds = new ArrayList<>();
+        if (macros == null) macros = new java.util.LinkedHashMap<>();
         autoJoinCommand = autoJoinCommand.trim();
         if (autoJoinCommand.startsWith("/")) autoJoinCommand = autoJoinCommand.substring(1);
         autoJoinCommand = autoJoinCommand.replaceAll("[\\r\\n]", "");
