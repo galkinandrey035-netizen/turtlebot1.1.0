@@ -2,6 +2,9 @@ package ru.turtlebot.goldbot;
 
 import net.minecraft.client.MinecraftClient;
 import ru.turtlebot.goldbot.modules.AntiAfkModule;
+import ru.turtlebot.goldbot.modules.AutoExpModule;
+import ru.turtlebot.goldbot.modules.AutoTotemModule;
+import ru.turtlebot.goldbot.modules.AutoTpAcceptModule;
 import ru.turtlebot.goldbot.modules.AutoRespawnModule;
 import ru.turtlebot.goldbot.modules.AutoEatModule;
 import ru.turtlebot.goldbot.modules.AutoLeaveModule;
@@ -23,6 +26,9 @@ public final class GoldModuleManager {
         register(new AutoEatModule());
         register(new AutoLeaveModule());
         register(new AutoToolModule());
+        register(new AutoTpAcceptModule());
+        register(new AutoExpModule());
+        register(new AutoTotemModule());
     }
 
     private GoldModuleManager() {}
