@@ -47,6 +47,10 @@ public final class GoldModuleManager {
         register(new BetterChatModule());
         register(new ESPModule());
         register(new TracersModule());
+        register(new BlockESPModule());
+        register(new TargetESPModule());
+        register(new ProjectileTrailsModule());
+        register(new WaypointModule());
     }
     private GoldModuleManager() {}
     private static void register(GoldModule module) { MODULES.put(module.name().toLowerCase(Locale.ROOT), module); }
