@@ -103,7 +103,7 @@ public final class TurtleBotClickGuiBridge {
                         handleMouseClick(client, current, mouseX, mouseY, button));
                 state.hooksRegistered = true;
             }
-            addSearchField(client, screen, state);
+            state.field = null;
         });
     }
 
@@ -170,8 +170,11 @@ public final class TurtleBotClickGuiBridge {
         }
 
         SearchState state = SEARCH_STATES.get(screen);
-        if (state != null && !state.query.isBlank()) {
-            renderSearchResults(client, context, screen, state, mouseX, mouseY);
+        if (state != null) {
+            if (state.field == null) addSearchField(client, screen, state);
+            if (!state.query.isBlank()) {
+                renderSearchResults(client, context, screen, state, mouseX, mouseY);
+            }
         }
     }
 
@@ -262,10 +265,6 @@ public final class TurtleBotClickGuiBridge {
             state.field = null;
             Method init = findScreenInit(screen);
             init.invoke(screen);
-            SearchState refreshed = SEARCH_STATES.get(screen);
-            if (refreshed != null && refreshed.field == null) {
-                addSearchField(client, screen, refreshed);
-            }
         } catch (ReflectiveOperationException exception) {
             BotLog.reply("§cНе удалось открыть найденную функцию: " + exception.getMessage());
         }
