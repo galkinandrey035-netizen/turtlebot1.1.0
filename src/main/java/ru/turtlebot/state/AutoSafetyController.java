@@ -70,7 +70,9 @@ public final class AutoSafetyController {
             if (distance > maxDistance) continue;
 
             String display = other.getDisplayName().getString();
-            if (cfg.autoLeaveStaff && looksLikeStaff(display)) {
+            String playerName = other.getName().getString();
+            if (containsName(cfg.friendNames, playerName)) continue;
+            if (cfg.autoLeaveStaff && (containsName(cfg.staffNames, playerName) || looksLikeStaff(display))) {
                 return "обнаружен возможный сотрудник " + display
                         + " на расстоянии " + String.format(Locale.ROOT, "%.1f", distance) + " м";
             }
@@ -80,6 +82,14 @@ public final class AutoSafetyController {
             }
         }
         return null;
+    }
+
+    private boolean containsName(java.util.List<String> names, String playerName) {
+        if (names == null || playerName == null) return false;
+        for (String name : names) {
+            if (name != null && !name.isBlank() && name.equalsIgnoreCase(playerName)) return true;
+        }
+        return false;
     }
 
     private boolean looksLikeStaff(String displayName) {
