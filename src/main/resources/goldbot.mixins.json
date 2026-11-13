@@ -10,8 +10,6 @@
     "ClientPlayerEntityAccessor",
     "ClientWorldPropertiesMixin",
     "ClientWorldSkyMixin",
-    "CosmeticCapeMixin",
-    "CosmeticPlayerRendererMixin",
     "EntityMixin",
     "EntityMoveYawMixin",
     "EntityRenderDispatcherMixin",
