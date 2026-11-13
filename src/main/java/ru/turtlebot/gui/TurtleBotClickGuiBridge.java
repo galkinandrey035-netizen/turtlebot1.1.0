@@ -2,25 +2,33 @@ package ru.turtlebot.gui;
 
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
-import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.block.BarrelBlock;
+import net.minecraft.block.ChestBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.text.Text;
 import ru.turtlebot.TurtleBotClient;
+import ru.turtlebot.config.BotConfig;
 import ru.turtlebot.config.ConfigManager;
 import ru.turtlebot.state.BotController;
 import ru.turtlebot.util.BotLog;
 
-
 /**
- * Adds TurtleBot controls to the existing client ClickGUI without modifying
- * any original GoldBot classes.
+ * Adds a compact TurtleBot control panel to GoldBot's existing ClickGUI.
+ * GoldBot classes and its original mining/home logic remain untouched.
  */
 public final class TurtleBotClickGuiBridge {
-    private static final int BUTTON_WIDTH = 58;
-    private static final int BUTTON_HEIGHT = 16;
-    private static final int GAP = 3;
+    private static final int PANEL_X = 8;
+    private static final int PANEL_Y = 8;
+    private static final int PANEL_WIDTH = 211;
+    private static final int PANEL_HEIGHT = 45;
+    private static final int BUTTON_WIDTH = 65;
+    private static final int BUTTON_HEIGHT = 17;
+    private static final int BUTTON_GAP = 4;
+    private static final int BUTTON_Y = PANEL_Y + 21;
     private static final String[] TARGET_SCREENS = {
             "aethereal.ClickGuiScreen",
             "dev.goldbot.ClickGuiScreen"
@@ -33,57 +41,49 @@ public final class TurtleBotClickGuiBridge {
             if (!isTargetScreen(screen)) return;
 
             ScreenEvents.afterRender(screen).register((current, context, mouseX, mouseY, tickDelta) ->
-                    render(client, current, context, mouseX, mouseY));
+                    render(client, context, mouseX, mouseY));
 
             ScreenMouseEvents.allowMouseClick(screen).register((current, mouseX, mouseY, button) -> {
-                if (button != 0) return true;
-                int[] origin = origin(current);
-                int x = origin[0];
-                int y = origin[1];
-                int totalWidth = BUTTON_WIDTH * 4 + GAP * 3;
-                if (mouseY < y || mouseY > y + BUTTON_HEIGHT || mouseX < x || mouseX > x + totalWidth) {
-                    return true;
-                }
+                if (button != 0 || mouseY < BUTTON_Y || mouseY > BUTTON_Y + BUTTON_HEIGHT) return true;
+                int relativeX = (int) mouseX - (PANEL_X + 5);
+                if (relativeX < 0) return true;
 
-                int index = (int) ((mouseX - x) / (BUTTON_WIDTH + GAP));
-                if (index < 0 || index > 3) return true;
-                if (mouseX > x + index * (BUTTON_WIDTH + GAP) + BUTTON_WIDTH) return true;
+                int stride = BUTTON_WIDTH + BUTTON_GAP;
+                int index = relativeX / stride;
+                if (index < 0 || index > 2 || relativeX % stride >= BUTTON_WIDTH) return true;
 
-                handleClick(client, current, index);
+                handleClick(client, index);
                 return false;
             });
         });
     }
 
-    private static void render(MinecraftClient client, Screen screen, DrawContext context,
-                               int mouseX, int mouseY) {
-        int[] origin = origin(screen);
-        String[] labels = {"TB Start", "TB Pause", "TB Stop", "TB Config"};
-        BotController bot = TurtleBotClient.controller();
+    private static void render(MinecraftClient client, DrawContext context, int mouseX, int mouseY) {
+        // A distinct compact panel; the original GoldBot ClickGUI layout is not redesigned.
+        context.fill(PANEL_X, PANEL_Y, PANEL_X + PANEL_WIDTH, PANEL_Y + PANEL_HEIGHT, 0xE91B1D24);
+        context.fill(PANEL_X, PANEL_Y, PANEL_X + PANEL_WIDTH, PANEL_Y + 1, 0xFFB58A3A);
+        context.fill(PANEL_X, PANEL_Y + PANEL_HEIGHT - 1,
+                PANEL_X + PANEL_WIDTH, PANEL_Y + PANEL_HEIGHT, 0xFF55515A);
+        context.drawText(client.textRenderer, Text.literal("TurtleBot"), PANEL_X + 7, PANEL_Y + 6,
+                0xFFFFD27A, false);
 
+        String[] labels = {"Старт", "Пауза", "Сундук"};
+        int[] colors = {0xFF245C3A, 0xFF665321, 0xFF343B4B};
         for (int i = 0; i < labels.length; i++) {
-            int x = origin[0] + i * (BUTTON_WIDTH + GAP);
-            int y = origin[1];
+            int x = PANEL_X + 5 + i * (BUTTON_WIDTH + BUTTON_GAP);
             boolean hovered = mouseX >= x && mouseX <= x + BUTTON_WIDTH
-                    && mouseY >= y && mouseY <= y + BUTTON_HEIGHT;
-            int color = switch (i) {
-                case 0 -> 0xFF245C3A;
-                case 1 -> 0xFF665321;
-                case 2 -> 0xFF652C2C;
-                default -> 0xFF343B4B;
-            };
-            if (hovered) color = (color & 0xFF000000) | (((color >> 16 & 0xFF) + 22) << 16)
-                    | (((color >> 8 & 0xFF) + 22) << 8) | Math.min(255, (color & 0xFF) + 22);
-            context.fill(x, y, x + BUTTON_WIDTH, y + BUTTON_HEIGHT, color);
+                    && mouseY >= BUTTON_Y && mouseY <= BUTTON_Y + BUTTON_HEIGHT;
+            int color = colors[i];
+            if (hovered) {
+                color = (color & 0xFF000000)
+                        | (Math.min(255, ((color >> 16) & 0xFF) + 22) << 16)
+                        | (Math.min(255, ((color >> 8) & 0xFF) + 22) << 8)
+                        | Math.min(255, (color & 0xFF) + 22);
+            }
+            context.fill(x, BUTTON_Y, x + BUTTON_WIDTH, BUTTON_Y + BUTTON_HEIGHT, color);
             context.drawCenteredTextWithShadow(client.textRenderer, Text.literal(labels[i]),
-                    x + BUTTON_WIDTH / 2, y + 4, 0xFFFFFFFF);
+                    x + BUTTON_WIDTH / 2, BUTTON_Y + 5, 0xFFFFFFFF);
         }
-
-        String state = bot == null ? "not ready"
-                : bot.isPaused() ? "paused" : bot.isActive() ? "running" : "stopped";
-        String chest = ConfigManager.get().chestSet ? "chest set" : "chest missing";
-        context.drawText(client.textRenderer, Text.literal("TurtleBot: " + state + " | " + chest),
-                origin[0], origin[1] + BUTTON_HEIGHT + 3, 0xFFB8DCC5, false);
     }
 
     private static boolean isTargetScreen(Screen screen) {
@@ -94,13 +94,7 @@ public final class TurtleBotClickGuiBridge {
         return false;
     }
 
-    private static int[] origin(Screen screen) {
-        // GoldBot's original ClickGUI is centered and uses private, obfuscated layout fields.
-        // Keep TurtleBot controls in the free top-left margin without reflecting into GoldBot internals.
-        return new int[]{8, 8};
-    }
-
-    private static void handleClick(MinecraftClient client, Screen parent, int index) {
+    private static void handleClick(MinecraftClient client, int index) {
         BotController bot = TurtleBotClient.controller();
         switch (index) {
             case 0 -> {
@@ -113,17 +107,32 @@ public final class TurtleBotClickGuiBridge {
                 if (bot.isPaused()) bot.resume();
                 else bot.pause();
             }
-            case 2 -> {
-                if (bot != null) bot.stop("остановлено через GoldBot ClickGUI");
-            }
-            case 3 -> {
-                if (FabricLoader.getInstance().isModLoaded("cloth-config")) {
-                    client.setScreen(ClothScreen.build(parent));
-                } else {
-                    BotLog.reply("§cДля настроек TurtleBot установите Cloth Config.");
-                }
-            }
+            case 2 -> setChestFromCrosshair(client);
             default -> { }
         }
+    }
+
+    private static void setChestFromCrosshair(MinecraftClient client) {
+        if (client.world == null || !(client.crosshairTarget instanceof BlockHitResult hit)
+                || hit.getType() != HitResult.Type.BLOCK) {
+            BotLog.reply("§cНаведите прицел на сундук или бочку.");
+            return;
+        }
+
+        var pos = hit.getBlockPos();
+        var block = client.world.getBlockState(pos).getBlock();
+        if (!(block instanceof ChestBlock || block instanceof BarrelBlock)) {
+            BotLog.reply("§cПод прицелом нет сундука или бочки.");
+            return;
+        }
+
+        BotConfig config = ConfigManager.get();
+        config.chestSet = true;
+        config.chestX = pos.getX();
+        config.chestY = pos.getY();
+        config.chestZ = pos.getZ();
+        config.chestDimension = client.world.getRegistryKey().getValue().toString();
+        ConfigManager.save();
+        BotLog.reply("§aСундук TurtleBot задан: " + pos.toShortString());
     }
 }
