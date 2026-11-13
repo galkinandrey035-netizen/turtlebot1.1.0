@@ -20,7 +20,7 @@ public abstract class GoldBotSkyMixin {
 
     @Inject(method = "getStarBrightness", at = @At("HEAD"), cancellable = true)
     private void turtlebot$starBrightness(float tickDelta, CallbackInfoReturnable<Float> cir) {
-        if (SkyFx.active((World) (Object) this)) {
+        if (GoldBotRuntime.skyActive(this)) {
             cir.setReturnValue(SkyFx.stars());
         }
     }
