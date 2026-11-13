@@ -3,6 +3,7 @@ package ru.turtlebot.goldbot;
 import net.minecraft.client.MinecraftClient;
 import ru.turtlebot.goldbot.modules.AntiAfkModule;
 import ru.turtlebot.goldbot.modules.AutoRespawnModule;
+import ru.turtlebot.goldbot.modules.AutoEatModule;
 import ru.turtlebot.goldbot.modules.AutoToolModule;
 import ru.turtlebot.goldbot.modules.SprintModule;
 
@@ -18,6 +19,7 @@ public final class GoldModuleManager {
         register(new SprintModule());
         register(new AntiAfkModule());
         register(new AutoRespawnModule());
+        register(new AutoEatModule());
         register(new AutoToolModule());
     }
 
