@@ -34,6 +34,7 @@ public final class TargetHudOverlay {
         if (!ConfigManager.get().targetHudEnabled) return;
 
         MinecraftClient client = MinecraftClient.getInstance();
+        if (client.currentScreen != null) return;
         if (client.crosshairTarget instanceof EntityHitResult hit
                 && hit.getEntity() instanceof LivingEntity living) {
             target = living;
