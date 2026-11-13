@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.minecraft.util.ActionResult;
 import ru.turtlebot.command.BotCommands;
 import ru.turtlebot.config.ConfigManager;
+import ru.turtlebot.config.BotConfig;
 import ru.turtlebot.data.TurtleRegistry;
 import ru.turtlebot.render.PathRenderer;
 import ru.turtlebot.util.FedTurtleHighlighter;
@@ -32,7 +33,26 @@ public final class TurtleBotClient implements ClientModInitializer {
         ClientTickEvents.END_CLIENT_TICK.register(controller::tick);
         ClientTickEvents.END_CLIENT_TICK.register(mc -> FedTurtleHighlighter.tick(mc, registry));
         PathRenderer.register(controller);
-        ClientPlayConnectionEvents.DISCONNECT.register((h, c) -> controller.stop("отключение от сервера"));
+        ClientPlayConnectionEvents.DISCONNECT.register((h, c) -> {
+            if (ConfigManager.get().continueOnWorldChange && controller.isActive()) {
+                controller.prepareForWorldChange();
+            } else {
+                controller.stop("отключение от сервера");
+            }
+        });
+        ClientPlayConnectionEvents.JOIN.register((h, sender, mc) -> {
+            BotConfig config = ConfigManager.get();
+            if (config.enabled) {
+                String error = controller.start();
+                if (error != null) {
+                    config.enabled = false;
+                    ConfigManager.save();
+                    BotLog.warn("Не удалось продолжить TurtleBot после смены мира: " + error);
+                } else {
+                    BotLog.info("TurtleBot продолжил работу в новом мире");
+                }
+            }
+        });
         ClientLifecycleEvents.CLIENT_STOPPING.register(c -> {
             controller.stop("закрытие клиента");
             registry.save();
