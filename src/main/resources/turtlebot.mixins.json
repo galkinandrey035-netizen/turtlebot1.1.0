@@ -19,6 +19,8 @@
     "NoRenderGameRendererMixin",
     "NoRenderOverlayMixin",
     "ViewModelMixin",
+    "AspectRatioMixin",
+    "BetterChatMixin",
     "accessor.ClientPlayerInteractionManagerAccessor",
     "accessor.LivingEntityAccessor",
     "accessor.MinecraftClientAccessor",

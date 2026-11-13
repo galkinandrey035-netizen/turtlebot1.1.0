@@ -43,6 +43,8 @@ public final class GoldModuleManager {
         register(new WorldTimeModule());
         register(new NoRenderModule());
         register(new ViewModelModule());
+        register(new AspectRatioModule());
+        register(new BetterChatModule());
     }
     private GoldModuleManager() {}
     private static void register(GoldModule module) { MODULES.put(module.name().toLowerCase(Locale.ROOT), module); }
