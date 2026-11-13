@@ -27,6 +27,7 @@
     "ItemChamsMixin",
     "NameProtectMixin",
     "ServerRPSpooferMixin",
+    "FreeCamMixin",
     "accessor.ClientPlayerInteractionManagerAccessor",
     "accessor.LivingEntityAccessor",
     "accessor.MinecraftClientAccessor",

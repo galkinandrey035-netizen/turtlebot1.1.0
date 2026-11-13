@@ -13,6 +13,7 @@ public abstract class ItemFixSwapMixin {
     @Inject(method = "send(Lnet/minecraft/network/packet/Packet;)V", at = @At("HEAD"), cancellable = true)
     private void turtlebot$fixSelectedSlot(Packet<?> packet, CallbackInfo ci) {
         ClientConnection connection = (ClientConnection) (Object) this;
+        if (ru.turtlebot.goldbot.modules.FreeCamModule.shouldCancel(packet)) { ci.cancel(); return; }
         ItemFixSwapModule.beforeAction(connection, packet);
         if (ItemFixSwapModule.cancelSlotPacket(packet)) ci.cancel();
     }
