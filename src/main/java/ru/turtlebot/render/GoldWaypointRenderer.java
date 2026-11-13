@@ -4,7 +4,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import ru.turtlebot.goldbot.modules.WaypointModule;
@@ -26,7 +25,7 @@ public final class GoldWaypointRenderer {
                 Vec3d p = waypoint.position();
                 Box box = new Box(p.x - 0.3, p.y, p.z - 0.3, p.x + 0.3, p.y + 1.8, p.z + 0.3)
                         .offset(-camera.x, -camera.y, -camera.z);
-                WorldRenderer.drawBox(matrices, lines, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ, 0.3f, 1.0f, 0.5f, 0.95f);
+                RenderLines.drawBox(lines, matrices.peek(), box, 0.3f, 1.0f, 0.5f, 0.95f);
             }
         } finally { matrices.pop(); }
     }

@@ -4,7 +4,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
@@ -25,7 +24,7 @@ public final class GoldEspRenderer {
             for (PlayerEntity target : client.world.getPlayers()) {
                 if (target == client.player || target.isSpectator() || !target.isAlive()) continue;
                 Box box = target.getBoundingBox().offset(-camera.x, -camera.y, -camera.z);
-                WorldRenderer.drawBox(matrices, lines, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ, 0.95f, 0.25f, 0.25f, 0.9f);
+                RenderLines.drawBox(lines, matrices.peek(), box, 0.95f, 0.25f, 0.25f, 0.9f);
             }
         } finally { matrices.pop(); }
     }
