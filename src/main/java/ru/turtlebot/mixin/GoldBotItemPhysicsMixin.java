@@ -50,18 +50,18 @@ public abstract class GoldBotItemPhysicsMixin {
     @Redirect(method = "render",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;translate(FFF)V"))
     private void turtlebot$physicsTranslate(MatrixStack matrices, float x, float y, float z) {
-        ItemPhysics.translate(matrices, x, y, z);
+        GoldBotRuntime.itemPhysicsTranslate(matrices, x, y, z);
     }
 
     @Redirect(method = "render",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;translate(DDD)V"))
     private void turtlebot$physicsTranslateD(MatrixStack matrices, double x, double y, double z) {
-        ItemPhysics.translate(matrices, (float) x, (float) y, (float) z);
+        GoldBotRuntime.itemPhysicsTranslate(matrices, (float) x, (float) y, (float) z);
     }
 
     @Redirect(method = "render",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;multiply(Lorg/joml/Quaternionf;)V"))
     private void turtlebot$physicsRotate(MatrixStack matrices, Quaternionf rotation) {
-        ItemPhysics.rotate(matrices, rotation);
+        GoldBotRuntime.itemPhysicsRotate(matrices, rotation);
     }
 }
