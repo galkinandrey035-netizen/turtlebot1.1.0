@@ -1,5 +1,7 @@
 package ru.turtlebot.mixin;
 
+import ru.turtlebot.runtime.GoldBotRuntime;
+
 import dev.goldbot.SkyFx;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.Vec3d;
