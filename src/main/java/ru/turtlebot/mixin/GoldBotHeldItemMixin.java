@@ -1,5 +1,7 @@
 package ru.turtlebot.mixin;
 
+import ru.turtlebot.runtime.GoldBotRuntime;
+
 import dev.goldbot.ViewModel;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
