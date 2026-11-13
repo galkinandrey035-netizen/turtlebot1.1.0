@@ -9,26 +9,39 @@ import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.minecraft.util.ActionResult;
 import ru.turtlebot.command.BotCommands;
-import ru.turtlebot.command.StaffCommands;
+import ru.turtlebot.command.LocalCommands;
 import ru.turtlebot.config.ConfigManager;
 import ru.turtlebot.data.TurtleRegistry;
-import ru.turtlebot.state.BotController;\nimport ru.turtlebot.state.AutoSafetyController;
+import ru.turtlebot.state.AutoSafetyController;
+import ru.turtlebot.state.BotController;
+import ru.turtlebot.state.MacroController;
 import ru.turtlebot.util.BotLog;
 
 public final class TurtleBotClient implements ClientModInitializer {
     private static BotController controller;
-    private static TurtleRegistry registry;\n    private static AutoSafetyController safetyController;
+    private static TurtleRegistry registry;
+    private static AutoSafetyController safetyController;
+    private static MacroController macroController;
+
     public static BotController controller() { return controller; }
+
     @Override
     public void onInitializeClient() {
         ConfigManager.load();
         registry = new TurtleRegistry();
         registry.load();
-        controller = new BotController(registry);\n        safetyController = new AutoSafetyController();
-        ClientSendMessageEvents.ALLOW_CHAT.register(message -> !StaffCommands.handle(message));
+        controller = new BotController(registry);
+        safetyController = new AutoSafetyController();
+        macroController = new MacroController();
+
+        ClientSendMessageEvents.ALLOW_CHAT.register(message -> !LocalCommands.handle(message));
         ClientCommandRegistrationCallback.EVENT.register(
                 (dispatcher, access) -> BotCommands.register(dispatcher, controller, registry));
-        ClientTickEvents.END_CLIENT_TICK.register(mc -> {\n            controller.tick(mc);\n            safetyController.tick(mc);\n        });
+        ClientTickEvents.END_CLIENT_TICK.register(mc -> {
+            controller.tick(mc);
+            safetyController.tick(mc);
+            macroController.tick(mc);
+        });
         ClientPlayConnectionEvents.DISCONNECT.register((h, c) -> controller.stop("отключение от сервера"));
         ClientLifecycleEvents.CLIENT_STOPPING.register(c -> {
             controller.stop("закрытие клиента");
