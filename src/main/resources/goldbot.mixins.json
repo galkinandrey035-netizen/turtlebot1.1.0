@@ -1,0 +1,31 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "dev.goldbot.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "AutoJumpMixin",
+    "BackgroundRendererMixin",
+    "CameraMixin",
+    "ClientPlayerEntityAccessor",
+    "ClientWorldPropertiesMixin",
+    "ClientWorldSkyMixin",
+    "CosmeticCapeMixin",
+    "CosmeticPlayerRendererMixin",
+    "EntityMixin",
+    "EntityMoveYawMixin",
+    "EntityRenderDispatcherMixin",
+    "FireworkRocketEntityMixin",
+    "GameRendererMixin",
+    "HeldItemRendererMixin",
+    "ItemEntityRenderStateMixin",
+    "ItemEntityRendererMixin",
+    "KeyboardInputMixin",
+    "LivingEntityJumpMixin",
+    "LivingEntityRendererMixin",
+    "MinecraftClientMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 0
+  }
+}

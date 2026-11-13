@@ -8,12 +8,13 @@
   "license": "MIT",
   "environment": "client",
   "entrypoints": {
-    "client": ["ru.turtlebot.TurtleBotClient"],
+    "client": ["ru.turtlebot.TurtleBotClient", "dev.goldbot.GoldBotMod"],
     "modmenu": ["ru.turtlebot.gui.ModMenuIntegration"]
   },
-  "mixins": ["turtlebot.mixins.json"],
+  "mixins": ["turtlebot.mixins.json", "goldbot.mixins.json"],
   "jars": [
-    { "file": "META-INF/jars/baritone-api-fabric-1.13.1.jar" }
+    { "file": "META-INF/jars/baritone-api-fabric-1.13.1.jar" },
+    { "file": "META-INF/jars/nether-pathfinder-1.4.1.jar" }
   ],
   "depends": {
     "fabricloader": ">=0.16.9",

@@ -81,6 +81,13 @@ tasks.named("jar", Jar) {
         into "META-INF/jars"
         rename { "baritone-api-fabric-1.13.1.jar" }
     }
+    from("libs/nether-pathfinder-1.4.1.jar") {
+        into "META-INF/jars"
+    }
+    // Original GoldBot UI, font and cosmetic resources are preserved verbatim.
+    from("goldbot") {
+        into "goldbot"
+    }
 }
 
 java {
