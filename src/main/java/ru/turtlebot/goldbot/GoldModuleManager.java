@@ -5,6 +5,9 @@ import ru.turtlebot.goldbot.modules.AntiAfkModule;
 import ru.turtlebot.goldbot.modules.GuiMoveModule;
 import ru.turtlebot.goldbot.modules.ClickPearlModule;
 import ru.turtlebot.goldbot.modules.AutoDuelModule;
+import ru.turtlebot.goldbot.modules.AutoArmorModule;
+import ru.turtlebot.goldbot.modules.AutoJoinModule;
+import ru.turtlebot.goldbot.modules.AutoUseModule;
 import ru.turtlebot.goldbot.modules.AutoExpModule;
 import ru.turtlebot.goldbot.modules.AutoTotemModule;
 import ru.turtlebot.goldbot.modules.AutoTpAcceptModule;
@@ -35,6 +38,9 @@ public final class GoldModuleManager {
         register(new GuiMoveModule());
         register(new ClickPearlModule());
         register(new AutoDuelModule());
+        register(new AutoArmorModule());
+        register(new AutoJoinModule());
+        register(new AutoUseModule());
     }
 
     private GoldModuleManager() {}
