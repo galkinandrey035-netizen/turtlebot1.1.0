@@ -22,6 +22,8 @@ import ru.turtlebot.goldbot.modules.AutoEatModule;
 import ru.turtlebot.goldbot.modules.AutoLeaveModule;
 import ru.turtlebot.goldbot.modules.AutoToolModule;
 import ru.turtlebot.goldbot.modules.SprintModule;
+import ru.turtlebot.goldbot.modules.NoDelayModule;
+import ru.turtlebot.goldbot.modules.NoPushModule;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -30,7 +32,6 @@ import java.util.Map;
 
 public final class GoldModuleManager {
     private static final Map<String, GoldModule> MODULES = new LinkedHashMap<>();
-
     static {
         register(new SprintModule());
         register(new AntiAfkModule());
@@ -53,25 +54,13 @@ public final class GoldModuleManager {
         register(new SpeedModule());
         register(new ChestStealerModule());
         register(new FakePlayerModule());
+        register(new NoDelayModule());
+        register(new NoPushModule());
     }
-
     private GoldModuleManager() {}
-
-    private static void register(GoldModule module) {
-        MODULES.put(module.name().toLowerCase(Locale.ROOT), module);
-    }
-
-    public static void tick(MinecraftClient client) {
-        for (GoldModule module : MODULES.values()) module.tick(client);
-    }
-
-    public static GoldModule get(String name) {
-        return name == null ? null : MODULES.get(name.toLowerCase(Locale.ROOT));
-    }
-
+    private static void register(GoldModule module) { MODULES.put(module.name().toLowerCase(Locale.ROOT), module); }
+    public static void tick(MinecraftClient client) { for (GoldModule module : MODULES.values()) module.tick(client); }
+    public static GoldModule get(String name) { return name == null ? null : MODULES.get(name.toLowerCase(Locale.ROOT)); }
     public static Collection<GoldModule> all() { return MODULES.values(); }
-
-    public static void disableAll(MinecraftClient client) {
-        for (GoldModule module : MODULES.values()) module.setEnabled(false, client);
-    }
+    public static void disableAll(MinecraftClient client) { for (GoldModule module : MODULES.values()) module.setEnabled(false, client); }
 }
