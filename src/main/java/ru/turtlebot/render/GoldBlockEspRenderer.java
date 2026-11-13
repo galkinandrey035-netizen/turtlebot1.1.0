@@ -21,7 +21,7 @@ public final class GoldBlockEspRenderer {
         try {
             for (var pos : BlockESPModule.positions()) {
                 Box box = new Box(pos).expand(0.002).offset(-camera.x, -camera.y, -camera.z);
-                WorldRenderer.drawBox(matrices, lines, box, 0.25f, 0.9f, 1.0f, 0.95f);
+                WorldRenderer.drawBox(matrices, lines, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ, 0.25f, 0.9f, 1.0f, 0.95f);
             }
         } finally { matrices.pop(); }
     }

@@ -20,7 +20,7 @@ public final class GoldTargetEspRenderer {
         var box = hit.getEntity().getBoundingBox().offset(-camera.x, -camera.y, -camera.z);
         var lines = context.consumers().getBuffer(RenderLayer.getLines());
         context.matrixStack().push();
-        try { WorldRenderer.drawBox(context.matrixStack(), lines, box, 1.0f, 0.8f, 0.15f, 1.0f); }
+        try { WorldRenderer.drawBox(context.matrixStack(), lines, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ, 1.0f, 0.8f, 0.15f, 1.0f); }
         finally { context.matrixStack().pop(); }
     }
 }

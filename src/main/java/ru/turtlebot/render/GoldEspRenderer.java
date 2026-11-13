@@ -25,7 +25,7 @@ public final class GoldEspRenderer {
             for (PlayerEntity target : client.world.getPlayers()) {
                 if (target == client.player || target.isSpectator() || !target.isAlive()) continue;
                 Box box = target.getBoundingBox().offset(-camera.x, -camera.y, -camera.z);
-                WorldRenderer.drawBox(matrices, lines, box, 0.95f, 0.25f, 0.25f, 0.9f);
+                WorldRenderer.drawBox(matrices, lines, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ, 0.95f, 0.25f, 0.25f, 0.9f);
             }
         } finally { matrices.pop(); }
     }

@@ -26,7 +26,7 @@ public final class GoldWaypointRenderer {
                 Vec3d p = waypoint.position();
                 Box box = new Box(p.x - 0.3, p.y, p.z - 0.3, p.x + 0.3, p.y + 1.8, p.z + 0.3)
                         .offset(-camera.x, -camera.y, -camera.z);
-                WorldRenderer.drawBox(matrices, lines, box, 0.3f, 1.0f, 0.5f, 0.95f);
+                WorldRenderer.drawBox(matrices, lines, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ, 0.3f, 1.0f, 0.5f, 0.95f);
             }
         } finally { matrices.pop(); }
     }
