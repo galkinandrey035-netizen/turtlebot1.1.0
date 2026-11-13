@@ -29,7 +29,11 @@ tasks.register("downloadBaritoneApi") {
         String expectedSha256 = "bfb79c3cdb8fe1f7697999b1f9c7f08ea29775f3b69d48ad90c387690ee67b05"
         if (!target.exists()) {
             target.parentFile.mkdirs()
-            new URL("https://github.com/cabaletta/baritone/releases/download/v1.13.1/baritone-api-fabric-1.13.1.jar").withInputStream { input ->
+            URLConnection connection = new URL("https://github.com/cabaletta/baritone/releases/download/v1.13.1/baritone-api-fabric-1.13.1.jar").openConnection()
+            connection.connectTimeout = 15000
+            connection.readTimeout = 60000
+            connection.setRequestProperty("User-Agent", "TurtleBot-build")
+            connection.inputStream.withCloseable { input ->
                 target.withOutputStream { output -> output << input }
             }
         }
@@ -44,7 +48,6 @@ tasks.register("downloadBaritoneApi") {
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    modImplementation files(baritoneApiJar)
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
