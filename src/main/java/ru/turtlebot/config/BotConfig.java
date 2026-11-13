@@ -1,5 +1,8 @@
 package ru.turtlebot.config;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public final class BotConfig {
     public String homeCommand = "home";
 
@@ -11,6 +14,7 @@ public final class BotConfig {
     public double autoLeaveMaxDistance = 10.0;
     public String autoJoinCommand = "g2";
     public int autoJoinDelaySeconds = 15;
+    public List<String> staffPrefixes = new ArrayList<>();
     public boolean chestSet = false;
     public String chestDimension = "";
     public int chestX = 0, chestY = 0, chestZ = 0;
@@ -46,6 +50,7 @@ public final class BotConfig {
         if (homeCommand == null || homeCommand.isBlank()) homeCommand = "home";
         if (chestDimension == null) chestDimension = "";
         if (autoJoinCommand == null) autoJoinCommand = "g2";
+        if (staffPrefixes == null) staffPrefixes = new ArrayList<>();
         autoJoinCommand = autoJoinCommand.trim();
         if (autoJoinCommand.startsWith("/")) autoJoinCommand = autoJoinCommand.substring(1);
         autoJoinCommand = autoJoinCommand.replaceAll("[\\r\\n]", "");
