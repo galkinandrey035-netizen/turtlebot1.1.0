@@ -11,7 +11,7 @@ import ru.turtlebot.goldbot.GoldModule;
 
 public final class AutoExpModule extends GoldModule {
     private static final KeyBinding USE_KEY = KeyBindingHelper.registerKeyBinding(
-            new KeyBinding("key.turtlebot.autoexp", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_X, KeyBinding.Category.MISC));
+            new KeyBinding("key.turtlebot.autoexp", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_X, "category.turtlebot"));
     private boolean lookDown = true;
 
     public AutoExpModule() { super("AutoExp", "Player"); }
