@@ -2,6 +2,7 @@ package ru.turtlebot.goldbot.modules;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.decoration.EndCrystalEntity;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Items;
 import net.minecraft.util.Hand;
@@ -11,7 +12,6 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.block.Blocks;
-import net.minecraft.screen.slot.SlotActionType;
 import ru.turtlebot.goldbot.FriendRegistry;
 import ru.turtlebot.goldbot.GoldModule;
 
@@ -41,7 +41,7 @@ public final class AutoCrystalModule extends GoldModule {
         if (client.player == null || client.world == null || client.interactionManager == null ||
                 client.currentScreen != null || System.currentTimeMillis() < nextActionAt) return;
 
-        PlayerEntity player = client.player;
+        ClientPlayerEntity player = client.player;
         PlayerEntity target = client.world.getPlayers().stream()
                 .filter(other -> other != player && other.isAlive())
                 .filter(other -> !FriendRegistry.isFriend(other.getGameProfile().getName()))
