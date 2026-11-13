@@ -43,7 +43,7 @@ public final class AutoRespawnModule extends GoldModule {
 
         if (mode == Mode.FUNTIME_BACK && client.getNetworkHandler() != null) {
             client.getNetworkHandler().sendPacket(
-                    new PlayerMoveC2SPacket.PositionAndOnGround(1448.0, 1337.0, 228.0, false));
+                    new PlayerMoveC2SPacket.PositionAndOnGround(1448.0, 1337.0, 228.0, false, false));
         }
 
         client.player.requestRespawn();
