@@ -17,6 +17,13 @@ public final class AutoUseModule extends GoldModule {
     public void setUseInvisibility(boolean value) { useInvisibility = value; }
     public void setEatHealthThreshold(float value) { eatHealthThreshold = Math.max(1.0F, Math.min(20.0F, value)); }
 
+    private static boolean hasInvisibilityEffect(PotionContentsComponent contents) {
+        for (var effect : contents.getEffects()) {
+            if (effect.getEffectType().equals(StatusEffects.INVISIBILITY)) return true;
+        }
+        return false;
+    }
+
     @Override protected void onTick(MinecraftClient client) {
         if (client.player == null || client.interactionManager == null || client.currentScreen != null) return;
         if (cooldown > 0) { cooldown--; return; }
@@ -26,7 +33,7 @@ public final class AutoUseModule extends GoldModule {
                 var stack = player.getInventory().getStack(i);
                 if (stack.isOf(Items.POTION)) {
                     var contents = stack.get(DataComponentTypes.POTION_CONTENTS);
-                    if (contents != null && contents.hasEffect(StatusEffects.INVISIBILITY)) {
+                    if (contents != null && hasInvisibilityEffect(contents)) {
                         int previous = player.getInventory().selectedSlot;
                         player.getInventory().selectedSlot = i;
                         client.interactionManager.interactItem(player, Hand.MAIN_HAND);
