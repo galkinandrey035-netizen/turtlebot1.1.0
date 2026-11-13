@@ -84,7 +84,7 @@ tasks.named("jar", Jar) {
     from("libs/nether-pathfinder-1.4.1.jar") {
         into "META-INF/jars"
     }
-    // Original GoldBot UI, font and cosmetic resources are preserved verbatim.
+    // Original GoldBot UI, font and particle resources are preserved verbatim; unused cosmetic models are excluded.
     from("goldbot") {
         into "goldbot"
         exclude "cosmetics/**"

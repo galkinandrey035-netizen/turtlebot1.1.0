@@ -6,71 +6,46 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
-import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
-import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.util.ActionResult;
 import ru.turtlebot.command.BotCommands;
-import ru.turtlebot.command.GoldBotCommands;
-import ru.turtlebot.goldbot.GoldModuleManager;
-import ru.turtlebot.goldbot.modules.NoFriendDamageModule;
-import ru.turtlebot.goldbot.modules.NoInteractModule;
-import ru.turtlebot.config.ConfigManager;
 import ru.turtlebot.config.BotConfig;
+import ru.turtlebot.config.ConfigManager;
 import ru.turtlebot.data.TurtleRegistry;
 import ru.turtlebot.render.PathRenderer;
-import ru.turtlebot.render.GoldEspRenderer;
-import ru.turtlebot.render.GoldTracersRenderer;
-import ru.turtlebot.render.GoldBlockEspRenderer;
-import ru.turtlebot.render.GoldTargetEspRenderer;
-import ru.turtlebot.render.GoldProjectileTrailsRenderer;
-import ru.turtlebot.render.GoldWaypointRenderer;
-import ru.turtlebot.render.GoldArrowsRenderer;
-import ru.turtlebot.render.GoldNameTagsRenderer;
-import ru.turtlebot.render.GoldProjectilePredictionRenderer;
-import ru.turtlebot.render.GoldInterfaceHudRenderer;
-import ru.turtlebot.util.FedTurtleHighlighter;
 import ru.turtlebot.state.BotController;
 import ru.turtlebot.util.BotLog;
-import ru.turtlebot.util.TurtleBotWorldOverlay;
+import ru.turtlebot.util.FedTurtleHighlighter;
 
 public final class TurtleBotClient implements ClientModInitializer {
     private static BotController controller;
     private static TurtleRegistry registry;
+
     public static BotController controller() { return controller; }
     public static TurtleRegistry registry() { return registry; }
+
     @Override
     public void onInitializeClient() {
         ConfigManager.load();
         registry = new TurtleRegistry();
         registry.load();
         controller = new BotController(registry);
+
         ru.turtlebot.gui.TurtleBotClickGuiBridge.register();
-        ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) -> {
-            BotCommands.register(dispatcher, controller, registry);
-            GoldBotCommands.register(dispatcher);
-        });
+
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) ->
+                BotCommands.register(dispatcher, controller, registry));
         ClientTickEvents.END_CLIENT_TICK.register(controller::tick);
-        ClientTickEvents.END_CLIENT_TICK.register(GoldModuleManager::tick);
         ClientTickEvents.END_CLIENT_TICK.register(mc -> FedTurtleHighlighter.tick(mc, registry));
         PathRenderer.register(controller);
-        GoldEspRenderer.register();
-        GoldTracersRenderer.register();
-        GoldBlockEspRenderer.register();
-        GoldTargetEspRenderer.register();
-        GoldProjectileTrailsRenderer.register();
-        GoldWaypointRenderer.register();
-        GoldArrowsRenderer.register();
-        GoldNameTagsRenderer.register();
-        GoldProjectilePredictionRenderer.register();
-        GoldInterfaceHudRenderer.register();
-        ClientPlayConnectionEvents.DISCONNECT.register((h, c) -> {
+
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
             if (ConfigManager.get().continueOnWorldChange && controller.isActive()) {
                 controller.prepareForWorldChange();
             } else {
                 controller.stop("отключение от сервера");
             }
         });
-        ClientPlayConnectionEvents.JOIN.register((h, sender, mc) -> {
+        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
             BotConfig config = ConfigManager.get();
             if (config.enabled) {
                 String error = controller.start();
@@ -83,21 +58,13 @@ public final class TurtleBotClient implements ClientModInitializer {
                 }
             }
         });
-        ClientLifecycleEvents.CLIENT_STOPPING.register(c -> {
+        ClientLifecycleEvents.CLIENT_STOPPING.register(client -> {
             controller.stop("закрытие клиента");
-            GoldModuleManager.disableAll(c);
             registry.save();
         });
-        AttackBlockCallback.EVENT.register((player, world, hand, pos, dir) ->
+        AttackBlockCallback.EVENT.register((player, world, hand, pos, direction) ->
                 world.isClient && controller.isActive() ? ActionResult.FAIL : ActionResult.PASS);
-        AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) ->
-                world.isClient && NoFriendDamageModule.shouldBlock(entity)
-                        ? ActionResult.FAIL : ActionResult.PASS);
-        UseBlockCallback.EVENT.register((player, world, hand, hitResult) ->
-                world.isClient && GoldModuleManager.get("NoInteract") != null &&
-                GoldModuleManager.get("NoInteract").enabled() &&
-                NoInteractModule.shouldBlock(world.getBlockState(hitResult.getBlockPos()))
-                        ? ActionResult.FAIL : ActionResult.PASS);
+
         BotLog.info("TurtleBot загружен. Команда: /turtlebot (или /tb)");
     }
 }

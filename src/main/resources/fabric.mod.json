@@ -4,17 +4,30 @@
   "version": "${version}",
   "name": "TurtleBot",
   "description": "Клиентский бот: кормит взрослых черепах морской травой из сундука.",
-  "authors": ["TurtleBot"],
+  "authors": [
+    "TurtleBot"
+  ],
   "license": "MIT",
   "environment": "client",
   "entrypoints": {
-    "client": ["ru.turtlebot.TurtleBotClient", "dev.goldbot.GoldBotMod"],
-    "modmenu": ["ru.turtlebot.gui.ModMenuIntegration"]
+    "client": [
+      "ru.turtlebot.TurtleBotClient",
+      "dev.goldbot.GoldBotMod"
+    ],
+    "modmenu": [
+      "ru.turtlebot.gui.ModMenuIntegration"
+    ]
   },
-  "mixins": ["turtlebot.mixins.json", "goldbot.mixins.json"],
+  "mixins": [
+    "goldbot.mixins.json"
+  ],
   "jars": [
-    { "file": "META-INF/jars/baritone-api-fabric-1.13.1.jar" },
-    { "file": "META-INF/jars/nether-pathfinder-1.4.1.jar" }
+    {
+      "file": "META-INF/jars/baritone-api-fabric-1.13.1.jar"
+    },
+    {
+      "file": "META-INF/jars/nether-pathfinder-1.4.1.jar"
+    }
   ],
   "depends": {
     "fabricloader": ">=0.16.9",
