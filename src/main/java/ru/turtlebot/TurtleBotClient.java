@@ -8,6 +8,8 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.minecraft.util.ActionResult;
 import ru.turtlebot.command.BotCommands;
+import ru.turtlebot.command.GoldBotCommands;
+import ru.turtlebot.goldbot.GoldModuleManager;
 import ru.turtlebot.config.ConfigManager;
 import ru.turtlebot.config.BotConfig;
 import ru.turtlebot.data.TurtleRegistry;
@@ -29,8 +31,12 @@ public final class TurtleBotClient implements ClientModInitializer {
         registry.load();
         controller = new BotController(registry);
         ClientCommandRegistrationCallback.EVENT.register(
-                (dispatcher, access) -> BotCommands.register(dispatcher, controller, registry));
+                (dispatcher, access) -> {
+                    BotCommands.register(dispatcher, controller, registry);
+                    GoldBotCommands.register(dispatcher);
+                });
         ClientTickEvents.END_CLIENT_TICK.register(controller::tick);
+        ClientTickEvents.END_CLIENT_TICK.register(GoldModuleManager::tick);
         ClientTickEvents.END_CLIENT_TICK.register(mc -> FedTurtleHighlighter.tick(mc, registry));
         PathRenderer.register(controller);
         ClientPlayConnectionEvents.DISCONNECT.register((h, c) -> {
@@ -55,6 +61,7 @@ public final class TurtleBotClient implements ClientModInitializer {
         });
         ClientLifecycleEvents.CLIENT_STOPPING.register(c -> {
             controller.stop("закрытие клиента");
+            GoldModuleManager.disableAll(c);
             registry.save();
         });
         AttackBlockCallback.EVENT.register((player, world, hand, pos, dir) ->
