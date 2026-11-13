@@ -4,7 +4,9 @@
   "package": "ru.turtlebot.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "EntityGlowMixin"
+    "EntityGlowMixin",
+    "GoldBotCleanupMixin",
+    "GoldBotClickGuiCleanupMixin"
   ],
   "injectors": { "defaultRequire": 1 }
 }
