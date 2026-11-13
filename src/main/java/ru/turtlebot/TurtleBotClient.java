@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.ActionResult;
 import ru.turtlebot.command.BotCommands;
 import ru.turtlebot.config.BotConfig;
@@ -63,7 +64,8 @@ public final class TurtleBotClient implements ClientModInitializer {
             registry.save();
         });
         AttackBlockCallback.EVENT.register((player, world, hand, pos, direction) ->
-                world.isClient && controller.isActive() ? ActionResult.FAIL : ActionResult.PASS);
+                world.isClient && controller.isActive() && world.getBlockState(pos).isOf(Blocks.TURTLE_EGG)
+                        ? ActionResult.FAIL : ActionResult.PASS);
 
         BotLog.info("TurtleBot загружен. Команда: /turtlebot (или /tb)");
     }
