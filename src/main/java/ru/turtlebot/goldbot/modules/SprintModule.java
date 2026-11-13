@@ -33,7 +33,7 @@ public final class SprintModule extends GoldModule {
         boolean blockedByUse = player.isUsingItem();
 
         if (!movingForward || blockedBySneak || blockedByFood || blockedByUse
-                || player.isTouchingWater() || player.isFallFlying()) {
+                || player.isTouchingWater() || player.isGliding()) {
             player.setSprinting(false);
             return;
         }
