@@ -32,6 +32,7 @@ public final class TurtleBotClient implements ClientModInitializer {
         controller = new BotController(registry);
 
         ru.turtlebot.gui.TurtleBotClickGuiBridge.register();
+        ru.turtlebot.render.TargetHudOverlay.register();
 
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) ->
                 BotCommands.register(dispatcher, controller, registry));
