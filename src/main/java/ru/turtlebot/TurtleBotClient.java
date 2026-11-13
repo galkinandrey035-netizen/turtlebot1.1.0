@@ -24,6 +24,8 @@ import ru.turtlebot.render.GoldBlockEspRenderer;
 import ru.turtlebot.render.GoldTargetEspRenderer;
 import ru.turtlebot.render.GoldProjectileTrailsRenderer;
 import ru.turtlebot.render.GoldWaypointRenderer;
+import ru.turtlebot.render.GoldArrowsRenderer;
+import ru.turtlebot.render.GoldNameTagsRenderer;
 import ru.turtlebot.util.FedTurtleHighlighter;
 import ru.turtlebot.state.BotController;
 import ru.turtlebot.util.BotLog;
@@ -54,6 +56,8 @@ public final class TurtleBotClient implements ClientModInitializer {
         GoldTargetEspRenderer.register();
         GoldProjectileTrailsRenderer.register();
         GoldWaypointRenderer.register();
+        GoldArrowsRenderer.register();
+        GoldNameTagsRenderer.register();
         ClientPlayConnectionEvents.DISCONNECT.register((h, c) -> {
             if (ConfigManager.get().continueOnWorldChange && controller.isActive()) {
                 controller.prepareForWorldChange();

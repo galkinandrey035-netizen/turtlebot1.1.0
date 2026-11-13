@@ -51,6 +51,8 @@ public final class GoldModuleManager {
         register(new TargetESPModule());
         register(new ProjectileTrailsModule());
         register(new WaypointModule());
+        register(new ArrowsModule());
+        register(new NameTagsModule());
     }
     private GoldModuleManager() {}
     private static void register(GoldModule module) { MODULES.put(module.name().toLowerCase(Locale.ROOT), module); }
