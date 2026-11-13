@@ -20,7 +20,7 @@ public abstract class GoldBotFogMixin {
     private static void turtlebot$skyFogColor(Camera camera, float tickDelta, ClientWorld world,
                                                int viewDistance, float skyDarkness,
                                                CallbackInfoReturnable<Vector4f> cir) {
-        int rgb = SkyFx.fogRgb(camera, world);
+        int rgb = GoldBotRuntime.fogRgb(camera, world);
         if (rgb < 0) return;
         cir.setReturnValue(new Vector4f(
                 ((rgb >> 16) & 255) / 255.0F,
@@ -37,7 +37,7 @@ public abstract class GoldBotFogMixin {
         Config config = GoldBotMod.cfg;
         if (config == null || !config.fogEnabled
                 || fogType != BackgroundRenderer.FogType.FOG_TERRAIN
-                || SkyFx.fogBlocked(camera)) {
+                || GoldBotRuntime.fogBlocked(camera)) {
             return;
         }
 
