@@ -8,7 +8,6 @@ import net.minecraft.client.render.entity.state.ItemEntityRenderState;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.BlockItem;
-import net.minecraft.util.math.MathHelper;
 import org.joml.Quaternionf;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -53,8 +52,11 @@ public abstract class GoldBotItemPhysicsMixin {
         GoldBotRuntime.itemPhysicsTranslate(matrices, x, y, z);
     }
 
+    // In 1.21.4 the renderer may use float translation only. Keep the double
+    // overload optional so its absence cannot abort the entire resource reload.
     @Redirect(method = "render",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;translate(DDD)V"))
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;translate(DDD)V"),
+            require = 0)
     private void turtlebot$physicsTranslateD(MatrixStack matrices, double x, double y, double z) {
         GoldBotRuntime.itemPhysicsTranslate(matrices, (float) x, (float) y, (float) z);
     }
