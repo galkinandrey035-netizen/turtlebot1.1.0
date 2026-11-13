@@ -7,6 +7,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.hit.EntityHitResult;
 import ru.turtlebot.config.ConfigManager;
 
 import java.util.Locale;
@@ -32,6 +33,13 @@ public final class TargetHudOverlay {
     private static void render(DrawContext context) {
         if (!ConfigManager.get().targetHudEnabled) return;
 
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (client.crosshairTarget instanceof EntityHitResult hit
+                && hit.getEntity() instanceof LivingEntity living) {
+            target = living;
+            expiresAt = System.currentTimeMillis() + 1500L;
+        }
+
         LivingEntity current = target;
         if (current == null) return;
         if (!current.isAlive() || System.currentTimeMillis() > expiresAt) {
@@ -39,7 +47,6 @@ public final class TargetHudOverlay {
             return;
         }
 
-        MinecraftClient client = MinecraftClient.getInstance();
         if (client.player == null || client.world == null || current.getWorld() != client.world) {
             target = null;
             return;
