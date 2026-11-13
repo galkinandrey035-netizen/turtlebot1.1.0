@@ -2,6 +2,7 @@ package ru.turtlebot.gui;
 
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
@@ -104,7 +105,13 @@ public final class TurtleBotClickGuiBridge {
             case 2 -> {
                 if (bot != null) bot.stop("остановлено через GoldBot ClickGUI");
             }
-            case 3 -> client.setScreen(ClothScreen.build(parent));
+            case 3 -> {
+                if (FabricLoader.getInstance().isModLoaded("cloth-config")) {
+                    client.setScreen(ClothScreen.build(parent));
+                } else {
+                    BotLog.reply("§cДля настроек TurtleBot установите Cloth Config.");
+                }
+            }
             default -> { }
         }
     }
