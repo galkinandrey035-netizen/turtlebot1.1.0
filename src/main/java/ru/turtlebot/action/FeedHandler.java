@@ -96,7 +96,7 @@ public final class FeedHandler {
 
                 Vec3d eye = player.getEyePos();
                 Vec3d end = eye.add(player.getRotationVec(1.0F)
-                        .multiply(mc.interactionManager.getReachDistance()));
+                        .multiply(player.getEntityInteractionRange()));
                 var hitPosition = turtle.getBoundingBox().expand(0.1).raycast(eye, end);
                 if (hitPosition.isEmpty()) {
                     // Do not send an entity interaction unless the player's view actually intersects the turtle.
@@ -114,7 +114,7 @@ public final class FeedHandler {
                     // Match vanilla's right-click fallback: generic entity interaction after interact-at returns PASS.
                     result = mc.interactionManager.interactEntity(player, turtle, Hand.MAIN_HAND);
                 }
-                if (result.shouldSwingHand()) player.swingHand(Hand.MAIN_HAND);
+                if (result.isAccepted()) player.swingHand(Hand.MAIN_HAND);
 
                 if (!result.isAccepted()) {
                     attempts++;
