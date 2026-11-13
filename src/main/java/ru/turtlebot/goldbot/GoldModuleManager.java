@@ -2,6 +2,8 @@ package ru.turtlebot.goldbot;
 
 import net.minecraft.client.MinecraftClient;
 import ru.turtlebot.goldbot.modules.AntiAfkModule;
+import ru.turtlebot.goldbot.modules.ChestStealerModule;
+import ru.turtlebot.goldbot.modules.FakePlayerModule;
 import ru.turtlebot.goldbot.modules.AutoCrystalModule;
 import ru.turtlebot.goldbot.modules.AirStuckModule;
 import ru.turtlebot.goldbot.modules.SpeedModule;
@@ -49,6 +51,8 @@ public final class GoldModuleManager {
         register(new AutoCrystalModule());
         register(new AirStuckModule());
         register(new SpeedModule());
+        register(new ChestStealerModule());
+        register(new FakePlayerModule());
     }
 
     private GoldModuleManager() {}
