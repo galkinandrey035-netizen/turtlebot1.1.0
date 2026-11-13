@@ -1,7 +1,7 @@
 package ru.turtlebot.goldbot.modules;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.math.Vec3d;
 import ru.turtlebot.goldbot.GoldModule;
 
@@ -26,7 +26,7 @@ public final class SpeedModule extends GoldModule {
 
     @Override
     protected void onTick(MinecraftClient client) {
-        PlayerEntity player = client.player;
+        ClientPlayerEntity player = client.player;
         if (player == null || client.world == null || client.currentScreen != null ||
                 player.isGliding() || player.isTouchingWater() || player.isInLava() ||
                 player.isSneaking()) return;
