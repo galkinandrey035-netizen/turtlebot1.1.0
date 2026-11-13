@@ -23,6 +23,8 @@
     "BetterChatMixin",
     "BetterF5Mixin",
     "VisualSpinMixin",
+    "AuctionHelperMixin",
+    "ItemChamsMixin",
     "accessor.ClientPlayerInteractionManagerAccessor",
     "accessor.LivingEntityAccessor",
     "accessor.MinecraftClientAccessor",

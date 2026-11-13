@@ -56,6 +56,11 @@ public final class GoldModuleManager {
         register(new BetterF5Module());
         register(new VisualSpinModule());
         register(new ProjectilePredictionModule());
+        register(new AuctionHelperModule());
+        register(new InterfaceModule());
+        register(new InterfaceHudModule());
+        register(new NewHUDModule());
+        register(new ItemChamsModule());
     }
     private GoldModuleManager() {}
     private static void register(GoldModule module) { MODULES.put(module.name().toLowerCase(Locale.ROOT), module); }
