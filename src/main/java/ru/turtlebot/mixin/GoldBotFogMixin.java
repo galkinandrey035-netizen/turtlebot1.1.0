@@ -1,5 +1,7 @@
 package ru.turtlebot.mixin;
 
+import ru.turtlebot.runtime.GoldBotRuntime;
+
 import dev.goldbot.Config;
 import dev.goldbot.GoldBotMod;
 import dev.goldbot.SkyFx;
