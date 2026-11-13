@@ -3,6 +3,8 @@ package ru.turtlebot.mixin;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.Shadow;
@@ -13,6 +15,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.lang.reflect.Method;
 import java.util.Locale;
+import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
 
 /**
  * Moves the always-visible inventory/status/health strip into GoldBot's GoldHelper page.
@@ -23,6 +27,13 @@ public abstract class GoldBotStatsRelocationMixin {
     @Shadow(remap = false)
     private void note(String text) { }
 
+    @Shadow(remap = false)
+    private void beginCard(int column, Item icon, String title,
+                           BooleanSupplier enabled, Consumer<Boolean> toggle) { }
+
+    @Shadow(remap = false)
+    private void endCard() { }
+
     /**
      * Prevents the stats strip from being drawn at the bottom of every ClickGUI page.
      */
@@ -31,11 +42,13 @@ public abstract class GoldBotStatsRelocationMixin {
 
     @Inject(method = "helperTab", at = @At("TAIL"), remap = false)
     private void turtlebot$appendGoldBotStats(CallbackInfo ci) {
+        beginCard(0, Items.GOLD_INGOT, "GoldBot status", null, null);
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.player == null) {
             note("Золото в инвентаре: —");
             note("Статус: недоступен");
             note("Здоровье: —");
+            endCard();
             return;
         }
 
@@ -65,5 +78,6 @@ public abstract class GoldBotStatsRelocationMixin {
         note("Золото в инвентаре: " + gold);
         note("Статус: " + status);
         note("Здоровье: " + health);
+        endCard();
     }
 }
