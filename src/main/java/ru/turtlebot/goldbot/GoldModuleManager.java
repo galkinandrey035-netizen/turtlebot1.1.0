@@ -4,11 +4,8 @@ import net.minecraft.client.MinecraftClient;
 import ru.turtlebot.goldbot.modules.AntiAfkModule;
 import ru.turtlebot.goldbot.modules.GuiMoveModule;
 import ru.turtlebot.goldbot.modules.ClickPearlModule;
-import ru.turtlebot.goldbot.modules.AutoDuelModule;
-import ru.turtlebot.goldbot.modules.AutoArmorModule;
 import ru.turtlebot.goldbot.modules.AutoJoinModule;
 import ru.turtlebot.goldbot.modules.AutoUseModule;
-import ru.turtlebot.goldbot.modules.AutoExpModule;
 import ru.turtlebot.goldbot.modules.AutoTotemModule;
 import ru.turtlebot.goldbot.modules.AutoTpAcceptModule;
 import ru.turtlebot.goldbot.modules.AutoRespawnModule;
@@ -33,12 +30,9 @@ public final class GoldModuleManager {
         register(new AutoLeaveModule());
         register(new AutoToolModule());
         register(new AutoTpAcceptModule());
-        register(new AutoExpModule());
         register(new AutoTotemModule());
         register(new GuiMoveModule());
         register(new ClickPearlModule());
-        register(new AutoDuelModule());
-        register(new AutoArmorModule());
         register(new AutoJoinModule());
         register(new AutoUseModule());
     }
