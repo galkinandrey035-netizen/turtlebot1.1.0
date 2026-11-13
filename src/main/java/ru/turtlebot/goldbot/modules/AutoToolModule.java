@@ -27,12 +27,12 @@ public final class AutoToolModule extends GoldModule {
 
         BlockPos pos = hit.getBlockPos();
         if (!pos.equals(target)) {
-            if (originalSlot < 0) originalSlot = player.getInventory().getSelectedSlot();
+            if (originalSlot < 0) originalSlot = player.getInventory().selectedSlot;
             target = pos.toImmutable();
         }
 
         var state = client.world.getBlockState(pos);
-        int bestSlot = player.getInventory().getSelectedSlot();
+        int bestSlot = player.getInventory().selectedSlot;
         float bestSpeed = player.getInventory().getStack(bestSlot).getMiningSpeedMultiplier(state);
 
         for (int slot = 0; slot < 9; slot++) {
@@ -43,12 +43,12 @@ public final class AutoToolModule extends GoldModule {
                 bestSlot = slot;
             }
         }
-        player.getInventory().setSelectedSlot(bestSlot);
+        player.getInventory().selectedSlot = bestSlot;
     }
 
     private void restore(ClientPlayerEntity player) {
         if (player != null && originalSlot >= 0) {
-            player.getInventory().setSelectedSlot(originalSlot);
+            player.getInventory().selectedSlot = originalSlot;
         }
         originalSlot = -1;
         target = null;
