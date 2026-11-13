@@ -2,6 +2,15 @@ package ru.turtlebot.config;
 
 public final class BotConfig {
     public String homeCommand = "home";
+
+    // AutoLeave / AutoJoin
+    public boolean autoLeaveEnabled = false;
+    public boolean autoLeavePlayers = true;
+    public boolean autoLeaveStaff = true;
+    public boolean autoLeaveToHub = true;
+    public double autoLeaveMaxDistance = 10.0;
+    public String autoJoinCommand = "g2";
+    public int autoJoinDelaySeconds = 15;
     public boolean chestSet = false;
     public String chestDimension = "";
     public int chestX = 0, chestY = 0, chestZ = 0;
@@ -36,6 +45,12 @@ public final class BotConfig {
     public void sanitize() {
         if (homeCommand == null || homeCommand.isBlank()) homeCommand = "home";
         if (chestDimension == null) chestDimension = "";
+        if (autoJoinCommand == null) autoJoinCommand = "g2";
+        autoJoinCommand = autoJoinCommand.trim();
+        if (autoJoinCommand.startsWith("/")) autoJoinCommand = autoJoinCommand.substring(1);
+        autoJoinCommand = autoJoinCommand.replaceAll("[\\r\\n]", "");
+        autoLeaveMaxDistance = clamp(autoLeaveMaxDistance, 5.0, 40.0);
+        autoJoinDelaySeconds = clamp(autoJoinDelaySeconds, 1, 600);
         radius = clamp(radius, 4, 64);
         feedCooldownSeconds = clamp(feedCooldownSeconds, 10, 3600);
         failBackoffSeconds = clamp(failBackoffSeconds, 5, 3600);
