@@ -1,30 +1,7 @@
 package ru.turtlebot.goldbot;
 
 import net.minecraft.client.MinecraftClient;
-import ru.turtlebot.goldbot.modules.AntiAfkModule;
-import ru.turtlebot.goldbot.modules.ChestStealerModule;
-import ru.turtlebot.goldbot.modules.FakePlayerModule;
-import ru.turtlebot.goldbot.modules.AutoCrystalModule;
-import ru.turtlebot.goldbot.modules.AirStuckModule;
-import ru.turtlebot.goldbot.modules.SpeedModule;
-import ru.turtlebot.goldbot.modules.AutoSwapModule;
-import ru.turtlebot.goldbot.modules.TriggerBotModule;
-import ru.turtlebot.goldbot.modules.NoFriendDamageModule;
-import ru.turtlebot.goldbot.modules.NoInteractModule;
-import ru.turtlebot.goldbot.modules.GuiMoveModule;
-import ru.turtlebot.goldbot.modules.ClickPearlModule;
-import ru.turtlebot.goldbot.modules.AutoJoinModule;
-import ru.turtlebot.goldbot.modules.AutoUseModule;
-import ru.turtlebot.goldbot.modules.AutoTotemModule;
-import ru.turtlebot.goldbot.modules.AutoTpAcceptModule;
-import ru.turtlebot.goldbot.modules.AutoRespawnModule;
-import ru.turtlebot.goldbot.modules.AutoEatModule;
-import ru.turtlebot.goldbot.modules.AutoLeaveModule;
-import ru.turtlebot.goldbot.modules.AutoToolModule;
-import ru.turtlebot.goldbot.modules.SprintModule;
-import ru.turtlebot.goldbot.modules.NoDelayModule;
-import ru.turtlebot.goldbot.modules.NoPushModule;
-
+import ru.turtlebot.goldbot.modules.*;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Locale;
@@ -56,6 +33,7 @@ public final class GoldModuleManager {
         register(new FakePlayerModule());
         register(new NoDelayModule());
         register(new NoPushModule());
+        register(new ItemScrollerModule());
     }
     private GoldModuleManager() {}
     private static void register(GoldModule module) { MODULES.put(module.name().toLowerCase(Locale.ROOT), module); }
