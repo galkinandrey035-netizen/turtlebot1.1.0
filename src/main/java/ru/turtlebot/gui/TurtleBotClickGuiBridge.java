@@ -26,13 +26,13 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 public final class TurtleBotClickGuiBridge {
-    private static final int PANEL_WIDTH = 211;
-    private static final int PANEL_HEIGHT = 45;
-    private static final int BUTTON_WIDTH = 65;
-    private static final int BUTTON_HEIGHT = 17;
-    private static final int BUTTON_GAP = 4;
-    private static final int BUTTON_OFFSET_X = 5;
-    private static final int BUTTON_OFFSET_Y = 21;
+    private static final int PANEL_WIDTH = 232;
+    private static final int PANEL_HEIGHT = 54;
+    private static final int BUTTON_WIDTH = 71;
+    private static final int BUTTON_HEIGHT = 19;
+    private static final int BUTTON_GAP = 5;
+    private static final int BUTTON_OFFSET_X = 7;
+    private static final int BUTTON_OFFSET_Y = 29;
     private static final int SEARCH_WIDTH = 180;
     private static final int SEARCH_HEIGHT = 18;
     private static final int SEARCH_RESULT_ROW = 18;
@@ -144,14 +144,14 @@ public final class TurtleBotClickGuiBridge {
         int px = panel[0];
         int py = panel[1];
 
-        context.fill(px, py, px + PANEL_WIDTH, py + PANEL_HEIGHT, 0xE91B1D24);
-        context.fill(px, py, px + PANEL_WIDTH, py + 1, 0xFFB58A3A);
-        context.fill(px, py + PANEL_HEIGHT - 1, px + PANEL_WIDTH, py + PANEL_HEIGHT, 0xFF55515A);
+        context.fill(px - 2, py - 2, px + PANEL_WIDTH + 2, py + PANEL_HEIGHT + 2, 0x66070A16);\n        context.fill(px, py, px + PANEL_WIDTH, py + PANEL_HEIGHT, 0xD9141728);
+        context.fill(px, py, px + PANEL_WIDTH, py + 1, 0xFF8B72FF);\n        context.fill(px, py + 1, px + PANEL_WIDTH, py + 2, 0x663F8CFF);
+        context.fill(px, py + PANEL_HEIGHT - 1, px + PANEL_WIDTH, py + PANEL_HEIGHT, 0xAA59618A);
         context.drawText(client.textRenderer, Text.literal("TurtleBot"), px + 7, py + 6,
-                0xFFFFD27A, false);
+                0xFFC7BCFF, false);
 
         String[] labels = {"Старт", "Пауза", "Сундук"};
-        int[] colors = {0xFF245C3A, 0xFF665321, 0xFF343B4B};
+        int[] colors = {0xCC285C63, 0xCC51477D, 0xCC293B66};
         for (int i = 0; i < labels.length; i++) {
             int x = px + BUTTON_OFFSET_X + i * (BUTTON_WIDTH + BUTTON_GAP);
             int y = py + BUTTON_OFFSET_Y;
@@ -164,7 +164,7 @@ public final class TurtleBotClickGuiBridge {
                         | (Math.min(255, ((color >> 8) & 0xFF) + 22) << 8)
                         | Math.min(255, (color & 0xFF) + 22);
             }
-            context.fill(x, y, x + BUTTON_WIDTH, y + BUTTON_HEIGHT, color);
+            context.fill(x - 1, y - 1, x + BUTTON_WIDTH + 1, y + BUTTON_HEIGHT + 1, 0x553F8CFF);\n            context.fill(x, y, x + BUTTON_WIDTH, y + BUTTON_HEIGHT, color);
             context.drawCenteredTextWithShadow(client.textRenderer, Text.literal(labels[i]),
                     x + BUTTON_WIDTH / 2, y + 5, 0xFFFFFFFF);
         }
@@ -189,7 +189,7 @@ public final class TurtleBotClickGuiBridge {
         int height = rows * SEARCH_RESULT_ROW + 4;
 
         context.fill(x, y, x + width, y + height, 0xF0141720);
-        context.fill(x, y, x + width, y + 1, 0xFFB58A3A);
+        context.fill(x, y, x + width, y + 1, 0xFF8B72FF);
         if (results.isEmpty()) {
             context.drawText(client.textRenderer, Text.literal("Ничего не найдено"),
                     x + 7, y + 7, 0xFFB9BEC8, false);
@@ -201,7 +201,7 @@ public final class TurtleBotClickGuiBridge {
             boolean hovered = mouseX >= x && mouseX <= x + width
                     && mouseY >= rowY && mouseY < rowY + SEARCH_RESULT_ROW;
             if (hovered) context.fill(x + 2, rowY, x + width - 2,
-                    rowY + SEARCH_RESULT_ROW, 0xFF343B4B);
+                    rowY + SEARCH_RESULT_ROW, 0xFF34365F);
             context.drawText(client.textRenderer, Text.literal(results.get(i).name),
                     x + 7, rowY + 5, 0xFFF0F0F0, false);
         }
