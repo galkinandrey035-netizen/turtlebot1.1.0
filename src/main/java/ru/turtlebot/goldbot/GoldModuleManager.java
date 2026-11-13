@@ -53,6 +53,9 @@ public final class GoldModuleManager {
         register(new WaypointModule());
         register(new ArrowsModule());
         register(new NameTagsModule());
+        register(new BetterF5Module());
+        register(new VisualSpinModule());
+        register(new ProjectilePredictionModule());
     }
     private GoldModuleManager() {}
     private static void register(GoldModule module) { MODULES.put(module.name().toLowerCase(Locale.ROOT), module); }

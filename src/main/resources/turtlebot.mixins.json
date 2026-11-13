@@ -21,6 +21,8 @@
     "ViewModelMixin",
     "AspectRatioMixin",
     "BetterChatMixin",
+    "BetterF5Mixin",
+    "VisualSpinMixin",
     "accessor.ClientPlayerInteractionManagerAccessor",
     "accessor.LivingEntityAccessor",
     "accessor.MinecraftClientAccessor",
