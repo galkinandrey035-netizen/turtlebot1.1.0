@@ -6,9 +6,11 @@
   "client": [
     "EntityGlowMixin",
     "EntityPushMixin",
+    "ClientPlayerPushMixin",
     "MultiTaskMixin",
     "ChorusControlMixin",
     "NoTraceMixin",
+    "NoTraceWebMixin",
     "ItemFixSwapMixin",
     "accessor.ClientPlayerInteractionManagerAccessor",
     "accessor.LivingEntityAccessor",
