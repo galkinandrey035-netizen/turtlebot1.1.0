@@ -11,7 +11,6 @@ import ru.turtlebot.config.ConfigManager;
 import ru.turtlebot.state.BotController;
 import ru.turtlebot.util.BotLog;
 
-import java.lang.reflect.Field;
 
 /**
  * Adds TurtleBot controls to the original GoldBot ClickGUI without changing
@@ -21,7 +20,7 @@ public final class TurtleBotClickGuiBridge {
     private static final int BUTTON_WIDTH = 58;
     private static final int BUTTON_HEIGHT = 16;
     private static final int GAP = 3;
-    private static final String TARGET_SCREEN = "dev.goldbot.ClickGuiScreen";
+    private static final String TARGET_SCREEN = "aethereal.ClickGuiScreen";
 
     private TurtleBotClickGuiBridge() {}
 
@@ -84,21 +83,9 @@ public final class TurtleBotClickGuiBridge {
     }
 
     private static int[] origin(Screen screen) {
-        int panelX = readInt(screen, "panelX", screen.width / 2 - 360);
-        int panelY = readInt(screen, "panelY", screen.height / 2 - 260);
-        int panelW = readInt(screen, "panelW", 720);
-        int totalWidth = BUTTON_WIDTH * 4 + GAP * 3;
-        return new int[]{panelX + Math.max(8, panelW - totalWidth - 12), panelY + 8};
-    }
-
-    private static int readInt(Screen screen, String name, int fallback) {
-        try {
-            Field field = screen.getClass().getDeclaredField(name);
-            field.setAccessible(true);
-            return field.getInt(screen);
-        } catch (ReflectiveOperationException | RuntimeException ignored) {
-            return fallback;
-        }
+        // GoldBot's original ClickGUI is centered and uses private, obfuscated layout fields.
+        // Keep TurtleBot controls in the free top-left margin without reflecting into GoldBot internals.
+        return new int[]{8, 8};
     }
 
     private static void handleClick(MinecraftClient client, Screen parent, int index) {
