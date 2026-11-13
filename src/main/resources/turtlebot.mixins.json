@@ -9,6 +9,7 @@
     "MultiTaskMixin",
     "ChorusControlMixin",
     "NoTraceMixin",
+    "ItemFixSwapMixin",
     "accessor.ClientPlayerInteractionManagerAccessor",
     "accessor.LivingEntityAccessor",
     "accessor.MinecraftClientAccessor",
