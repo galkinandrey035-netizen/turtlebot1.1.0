@@ -5,9 +5,11 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallba
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.minecraft.util.ActionResult;
 import ru.turtlebot.command.BotCommands;
+import ru.turtlebot.command.StaffCommands;
 import ru.turtlebot.config.ConfigManager;
 import ru.turtlebot.data.TurtleRegistry;
 import ru.turtlebot.state.BotController;\nimport ru.turtlebot.state.AutoSafetyController;
@@ -23,6 +25,7 @@ public final class TurtleBotClient implements ClientModInitializer {
         registry = new TurtleRegistry();
         registry.load();
         controller = new BotController(registry);\n        safetyController = new AutoSafetyController();
+        ClientSendMessageEvents.ALLOW_CHAT.register(message -> !StaffCommands.handle(message));
         ClientCommandRegistrationCallback.EVENT.register(
                 (dispatcher, access) -> BotCommands.register(dispatcher, controller, registry));
         ClientTickEvents.END_CLIENT_TICK.register(mc -> {\n            controller.tick(mc);\n            safetyController.tick(mc);\n        });
