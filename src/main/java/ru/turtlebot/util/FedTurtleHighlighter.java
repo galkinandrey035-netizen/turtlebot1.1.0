@@ -79,11 +79,11 @@ public final class FedTurtleHighlighter {
             if (enabled) {
                 Team want = team(sb, teamName, color);
                 String key = t.getUuidAsString();
-                Team cur = sb.getPlayerTeam(key);
-                if (cur == null || !cur.getName().equals(teamName)) sb.addPlayerToTeam(key, want);
+                Team cur = sb.getScoreHolderTeam(key);
+                if (cur == null || !cur.getName().equals(teamName)) sb.addScoreHolderToTeam(key, want);
                 glowing.add(id);
             } else if (glowing.remove(id)) {
-                sb.clearPlayerTeam(t.getUuidAsString());
+                sb.clearTeam(t.getUuidAsString());
             }
 
             if (labels) {
