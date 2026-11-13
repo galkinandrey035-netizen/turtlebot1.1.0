@@ -2,6 +2,8 @@ package ru.turtlebot.config;
 
 public final class BotConfig {
     public String homeCommand = "home";
+    public boolean enabled = false;
+    public boolean continueOnWorldChange = false;
     public boolean chestSet = false;
     public String chestDimension = "";
     public int chestX = 0, chestY = 0, chestZ = 0;
