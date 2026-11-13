@@ -28,7 +28,7 @@ public final class SpeedModule extends GoldModule {
     protected void onTick(MinecraftClient client) {
         PlayerEntity player = client.player;
         if (player == null || client.world == null || client.currentScreen != null ||
-                player.isFallFlying() || player.isTouchingWater() || player.isInLava() ||
+                player.isGliding() || player.isTouchingWater() || player.isInLava() ||
                 player.isSneaking()) return;
 
         float forward = player.input.movementForward;
