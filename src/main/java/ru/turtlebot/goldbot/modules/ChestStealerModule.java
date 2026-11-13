@@ -22,7 +22,7 @@ public final class ChestStealerModule extends GoldModule {
     @Override
     protected void onTick(MinecraftClient client) {
         if (client.player == null || client.interactionManager == null ||
-                !(client.currentScreen instanceof GenericContainerScreen<?>)) return;
+                !(client.currentScreen instanceof GenericContainerScreen)) return;
         long now = System.currentTimeMillis();
         if (now < nextMoveAt) return;
 
