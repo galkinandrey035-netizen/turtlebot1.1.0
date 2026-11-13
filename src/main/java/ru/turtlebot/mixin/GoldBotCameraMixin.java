@@ -19,7 +19,7 @@ public abstract class GoldBotCameraMixin {
                                                       boolean thirdPerson, boolean inverseView,
                                                       float tickDelta, CallbackInfo ci) {
         if (GoldBotMod.FREECAM != null) {
-            GoldBotMod.FREECAM.frame(MinecraftClient.getInstance());
+            GoldBotRuntime.freeCamFrame(GoldBotMod.FREECAM, MinecraftClient.getInstance());
         }
     }
 
