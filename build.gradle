@@ -84,9 +84,10 @@ tasks.named("jar", Jar) {
     from("libs/nether-pathfinder-1.4.1.jar") {
         into "META-INF/jars"
     }
-    // Original GoldBot UI, font and particle resources are preserved verbatim; unused cosmetic models are excluded.
+    // Minecraft namespace resources must be packaged under assets/<namespace>.
+    // Keep the original GoldBot resource files unchanged; omit only unused cosmetic models.
     from("goldbot") {
-        into "goldbot"
+        into "assets/goldbot"
         exclude "cosmetics/**"
     }
 }
