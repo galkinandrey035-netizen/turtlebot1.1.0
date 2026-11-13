@@ -18,6 +18,8 @@ import ru.turtlebot.config.ConfigManager;
 import ru.turtlebot.config.BotConfig;
 import ru.turtlebot.data.TurtleRegistry;
 import ru.turtlebot.render.PathRenderer;
+import ru.turtlebot.render.GoldEspRenderer;
+import ru.turtlebot.render.GoldTracersRenderer;
 import ru.turtlebot.util.FedTurtleHighlighter;
 import ru.turtlebot.state.BotController;
 import ru.turtlebot.util.BotLog;
@@ -34,15 +36,16 @@ public final class TurtleBotClient implements ClientModInitializer {
         registry = new TurtleRegistry();
         registry.load();
         controller = new BotController(registry);
-        ClientCommandRegistrationCallback.EVENT.register(
-                (dispatcher, access) -> {
-                    BotCommands.register(dispatcher, controller, registry);
-                    GoldBotCommands.register(dispatcher);
-                });
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) -> {
+            BotCommands.register(dispatcher, controller, registry);
+            GoldBotCommands.register(dispatcher);
+        });
         ClientTickEvents.END_CLIENT_TICK.register(controller::tick);
         ClientTickEvents.END_CLIENT_TICK.register(GoldModuleManager::tick);
         ClientTickEvents.END_CLIENT_TICK.register(mc -> FedTurtleHighlighter.tick(mc, registry));
         PathRenderer.register(controller);
+        GoldEspRenderer.register();
+        GoldTracersRenderer.register();
         ClientPlayConnectionEvents.DISCONNECT.register((h, c) -> {
             if (ConfigManager.get().continueOnWorldChange && controller.isActive()) {
                 controller.prepareForWorldChange();
@@ -75,8 +78,8 @@ public final class TurtleBotClient implements ClientModInitializer {
                         ? ActionResult.FAIL : ActionResult.PASS);
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) ->
                 world.isClient && GoldModuleManager.get("NoInteract") != null &&
-                        GoldModuleManager.get("NoInteract").enabled() &&
-                        NoInteractModule.shouldBlock(world.getBlockState(hitResult.getBlockPos()))
+                GoldModuleManager.get("NoInteract").enabled() &&
+                NoInteractModule.shouldBlock(world.getBlockState(hitResult.getBlockPos()))
                         ? ActionResult.FAIL : ActionResult.PASS);
         BotLog.info("TurtleBot загружен. Команда: /turtlebot (или /tb)");
     }

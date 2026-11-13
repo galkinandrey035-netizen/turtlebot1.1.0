@@ -45,6 +45,8 @@ public final class GoldModuleManager {
         register(new ViewModelModule());
         register(new AspectRatioModule());
         register(new BetterChatModule());
+        register(new ESPModule());
+        register(new TracersModule());
     }
     private GoldModuleManager() {}
     private static void register(GoldModule module) { MODULES.put(module.name().toLowerCase(Locale.ROOT), module); }
