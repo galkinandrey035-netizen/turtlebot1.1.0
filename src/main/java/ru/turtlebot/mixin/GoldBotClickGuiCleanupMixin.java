@@ -45,6 +45,9 @@ public abstract class GoldBotClickGuiCleanupMixin {
     private void trailLineCard(int index) { }
 
     @Overwrite(remap = false)
+    private void jumpParticlesCard(int index) { }
+
+    @Overwrite(remap = false)
     private void cosmeticsGeneralTab() { }
 
     @Overwrite(remap = false)
