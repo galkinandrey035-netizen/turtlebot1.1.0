@@ -25,6 +25,8 @@
     "VisualSpinMixin",
     "AuctionHelperMixin",
     "ItemChamsMixin",
+    "NameProtectMixin",
+    "ServerRPSpooferMixin",
     "accessor.ClientPlayerInteractionManagerAccessor",
     "accessor.LivingEntityAccessor",
     "accessor.MinecraftClientAccessor",

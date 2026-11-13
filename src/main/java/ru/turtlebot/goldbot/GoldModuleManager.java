@@ -61,6 +61,13 @@ public final class GoldModuleManager {
         register(new InterfaceHudModule());
         register(new NewHUDModule());
         register(new ItemChamsModule());
+        register(new AutoPilotModule());
+        register(new NameProtectModule());
+        register(new TabExpertModule());
+        register(new ServerRPSpooferModule());
+        register(new ThrowXPModule());
+        register(new UseTrackerModule());
+        register(new ClickGuiModule());
     }
     private GoldModuleManager() {}
     private static void register(GoldModule module) { MODULES.put(module.name().toLowerCase(Locale.ROOT), module); }
