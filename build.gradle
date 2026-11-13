@@ -75,6 +75,11 @@ tasks.named("jar", Jar) {
     // Original GoldBot bytecode is vendored unchanged; only bundled into the final client.
     from(zipTree("libs/goldbot-bytecode.jar")) {
         include "dev/**/*.class"
+        // Cosmetic code is not part of this build; its GUI hooks are overwritten
+        // and its renderer mixins are not registered.
+        exclude "dev/goldbot/cosmetics/**"
+        exclude "dev/goldbot/mixin/CosmeticCapeMixin.class"
+        exclude "dev/goldbot/mixin/CosmeticPlayerRendererMixin.class"
     }
     // Baritone API for Minecraft 1.21.4, nested as a separate Fabric mod.
     from(baritoneApiJar) {
