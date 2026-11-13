@@ -215,7 +215,6 @@ public final class BotController {
             fail("здоровье ниже порога (" + cfg().minHealth + ") или игрок погиб");
             return;
         }
-        mc.options.attackKey.setPressed(false);
         mc.options.jumpKey.setPressed(false);
         if (AutoEat.tick(mc)) {
             nav.releaseMovement(mc);
