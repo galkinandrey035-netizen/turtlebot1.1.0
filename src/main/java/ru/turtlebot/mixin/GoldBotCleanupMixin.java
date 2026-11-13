@@ -1,6 +1,7 @@
 package ru.turtlebot.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -12,6 +13,7 @@ import java.lang.reflect.Method;
  * Disables the explicitly unwanted GoldBot visuals after its own config loads.
  * The original GoldBot classes and mining logic are not modified.
  */
+@Pseudo
 @Mixin(targets = "dev.goldbot.GoldBotMod")
 public abstract class GoldBotCleanupMixin {
     @Inject(method = "onInitializeClient", at = @At("TAIL"), remap = false)
