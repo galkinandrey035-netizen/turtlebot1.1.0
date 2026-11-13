@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import ru.turtlebot.goldbot.GoldModule;
 import ru.turtlebot.goldbot.GoldModuleManager;
+import ru.turtlebot.goldbot.modules.AutoRespawnModule;
 import ru.turtlebot.util.BotLog;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
@@ -16,6 +17,29 @@ public final class GoldBotCommands {
         dispatcher.register(literal("goldbot")
                 .executes(ctx -> { list(); return 1; })
                 .then(literal("list").executes(ctx -> { list(); return 1; }))
+                .then(literal("mode")
+                        .then(literal("autorespawn")
+                                .then(com.mojang.brigadier.builder.RequiredArgumentBuilder.<FabricClientCommandSource, String>argument(
+                                        "mode", com.mojang.brigadier.arguments.StringArgumentType.word())
+                                        .suggests((ctx, builder) -> {
+                                            builder.suggest("default");
+                                            builder.suggest("funtime");
+                                            return builder.buildFuture();
+                                        })
+                                        .executes(ctx -> {
+                                            String selected = com.mojang.brigadier.arguments.StringArgumentType.getString(ctx, "mode");
+                                            AutoRespawnModule module = (AutoRespawnModule) GoldModuleManager.get("AutoRespawn");
+                                            if (selected.equalsIgnoreCase("default")) {
+                                                module.setMode(AutoRespawnModule.Mode.DEFAULT);
+                                            } else if (selected.equalsIgnoreCase("funtime")) {
+                                                module.setMode(AutoRespawnModule.Mode.FUNTIME_BACK);
+                                            } else {
+                                                BotLog.reply("§cРежимы: default, funtime");
+                                                return 0;
+                                            }
+                                            BotLog.reply("AutoRespawn mode: §a" + selected.toLowerCase());
+                                            return 1;
+                                        }))))
                 .then(literal("toggle")
                         .then(com.mojang.brigadier.builder.RequiredArgumentBuilder.<FabricClientCommandSource, String>argument(
                                 "module", com.mojang.brigadier.arguments.StringArgumentType.word())
@@ -42,6 +66,6 @@ public final class GoldBotCommands {
             BotLog.reply("§7[" + module.category() + "] §f" + module.name()
                     + " §8— " + (module.enabled() ? "§aON" : "§cOFF"));
         }
-        BotLog.reply("Использование: /goldbot toggle <module>");
+        BotLog.reply("Использование: /goldbot toggle <module> | /goldbot mode autorespawn <default|funtime>");
     }
 }
