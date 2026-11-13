@@ -33,6 +33,7 @@ public final class BotConfig {
     public int maxReplans = 6;
     public double minHealth = 6.0;
     public boolean chatMessages = true;
+    public boolean targetHudEnabled = true;
     public int turtleForgetDays = 7;
 
     public void sanitize() {
