@@ -41,6 +41,8 @@ public final class GoldModuleManager {
         register(new AntiInvisibleModule());
         register(new FullBrightModule());
         register(new WorldTimeModule());
+        register(new NoRenderModule());
+        register(new ViewModelModule());
     }
     private GoldModuleManager() {}
     private static void register(GoldModule module) { MODULES.put(module.name().toLowerCase(Locale.ROOT), module); }
