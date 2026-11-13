@@ -2,6 +2,10 @@ package ru.turtlebot.goldbot;
 
 import net.minecraft.client.MinecraftClient;
 import ru.turtlebot.goldbot.modules.AntiAfkModule;
+import ru.turtlebot.goldbot.modules.AutoSwapModule;
+import ru.turtlebot.goldbot.modules.TriggerBotModule;
+import ru.turtlebot.goldbot.modules.NoFriendDamageModule;
+import ru.turtlebot.goldbot.modules.NoInteractModule;
 import ru.turtlebot.goldbot.modules.GuiMoveModule;
 import ru.turtlebot.goldbot.modules.ClickPearlModule;
 import ru.turtlebot.goldbot.modules.AutoJoinModule;
@@ -35,6 +39,10 @@ public final class GoldModuleManager {
         register(new ClickPearlModule());
         register(new AutoJoinModule());
         register(new AutoUseModule());
+        register(new AutoSwapModule());
+        register(new TriggerBotModule());
+        register(new NoFriendDamageModule());
+        register(new NoInteractModule());
     }
 
     private GoldModuleManager() {}
